@@ -127,3 +127,4 @@ https://gh-proxy.com/https://raw.githubusercontent.com/<你的用户名>/image-v
 - `docs/开发文档.md`：架构、模块、构建与实现细节
 - `docs/验收报告.md`：验收清单、性能数据与迭代记录
 - `plugins/README.md`：插件格式与插件源说明
+- `docs/GitHub上传指南.md`：从零创建仓库、推送、PAT、Releases 的步骤
