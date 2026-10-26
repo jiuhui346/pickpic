@@ -62,7 +62,6 @@ export function Onboarding() {
           </span>
           <div>
             <h1 className="text-[17px] font-semibold">欢迎使用 拾图</h1>
-            <p className="text-[11px] text-accent">轻量化图片管理器 · 本地离线</p>
             <p className="hint-text mt-0.5 text-[12px] text-muted">
               图片、缩略图和索引全部保存在你指定的目录里，软件不联网、不上传任何数据。
             </p>

@@ -33,10 +33,7 @@ export function Sidebar() {
         <span className="flex h-6 w-6 items-center justify-center rounded-md bg-accent text-[12px] font-semibold text-white">
           图
         </span>
-        <div className="min-w-0">
-          <div className="text-[14px] font-semibold leading-5">拾图</div>
-          <div className="text-[10px] leading-3 text-muted">轻量化图片管理器</div>
-        </div>
+        <span className="text-[14px] font-semibold">拾图</span>
       </div>
 
       <nav className="flex-1 overflow-y-auto px-2 pb-2">

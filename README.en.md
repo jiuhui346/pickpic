@@ -44,8 +44,8 @@ A local, offline Windows image manager — drag in, organize, drag out when you 
 
 | File | Notes |
 | --- | --- |
-| `PickPic_1.0.10_x64-setup.exe` | NSIS installer, recommended |
-| `PickPic_1.0.10_x64_en-US.msi` | MSI installer for managed deployment |
+| `PickPic_1.0.11_x64-setup.exe` | NSIS installer, recommended |
+| `PickPic_1.0.11_x64_en-US.msi` | MSI installer for managed deployment |
 
 Requirements: Windows 10 / 11 (x64) with WebView2 Runtime (bundled with Windows 11; usually present on Windows 10 via Edge).
 
