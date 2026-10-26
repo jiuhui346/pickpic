@@ -98,7 +98,7 @@ pickpic/
 ├─ src/              React 前端
 ├─ src-tauri/        Rust / Tauri 后端
 ├─ plugins/          在线插件源（index.json + 各插件）
-├─ docs/             使用说明 / 开发文档 / 验收报告
+├─ docs/             使用说明 / 开发文档
 ├─ scripts/          构建与开发脚本
 └─ release/          安装包输出（git 忽略）
 ```
@@ -124,6 +124,4 @@ pickpic/
 
 - [使用说明](docs/使用说明.md)
 - [开发文档](docs/开发文档.md)
-- [验收报告](docs/验收报告.md)
 - [插件格式](plugins/README.md)
-- [GitHub 上传指南](docs/GitHub上传指南.md)

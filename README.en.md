@@ -124,6 +124,4 @@ Vault layout:
 
 - [User guide (Chinese)](docs/使用说明.md)
 - [Developer documentation (Chinese)](docs/开发文档.md)
-- [Acceptance report (Chinese)](docs/验收报告.md)
 - [Plugin format](plugins/README.md)
-- [GitHub upload guide (Chinese)](docs/GitHub上传指南.md)
