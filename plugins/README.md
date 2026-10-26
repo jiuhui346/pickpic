@@ -1,6 +1,6 @@
 # 插件仓库
 
-这个目录同时是 Image Vault 的在线插件源。软件里填写的地址格式：
+这个目录同时是 PickPic 的在线插件源。软件里填写的地址格式：
 
 ```
 https://fastly.jsdelivr.net/gh/<GitHub用户名>/<仓库名>@main/plugins/index.json
@@ -37,7 +37,7 @@ plugins/
 
 `index.json` 里的每个插件需要包含 `id / name / version / description / files`，
 `files` 是相对 `plugins/<id>/` 的文件列表。软件按这个列表逐个下载，安装到
-`%APPDATA%\ImageVault\plugins\<id>`，默认禁用，启用后重新加载生效。
+`%APPDATA%\PickPic\plugins\<id>`，默认禁用，启用后重新加载生效。
 
 ## 新增插件
 

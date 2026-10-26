@@ -58,7 +58,7 @@ export function McpSettingsSection() {
 
   const copyStdio = async () => {
     const exe = await api.appExePath();
-    const config = { mcpServers: { "image-vault": { command: exe, args: ["--mcp-stdio"] } } };
+    const config = { mcpServers: { "pickpic": { command: exe, args: ["--mcp-stdio"] } } };
     await copyText(JSON.stringify(config, null, 2), "已复制 stdio 配置，粘贴到 Agent 的 MCP 配置里");
   };
 
@@ -66,7 +66,7 @@ export function McpSettingsSection() {
     const url = status?.url || `http://127.0.0.1:${settings.mcpPort}/mcp`;
     const config = {
       mcpServers: {
-        "image-vault": {
+        "pickpic": {
           url,
           headers: { Authorization: `Bearer ${status?.token ?? settings.mcpToken}` },
         },

@@ -2002,33 +2002,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "image-vault"
-version = "1.0.8"
-dependencies = [
- "avif-decode",
- "base64 0.22.1",
- "blake3",
- "chrono",
- "fs2",
- "image",
- "resvg",
- "rusqlite",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-dialog",
- "tauri-plugin-drag",
- "tauri-plugin-single-instance",
- "tiny_http",
- "tokio",
- "ureq",
- "uuid",
- "walkdir",
- "winreg 0.55.0",
-]
-
-[[package]]
 name = "image-webp"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2937,6 +2910,33 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e57fef6bc5981e38c2ce2d63bfa546861309f875b8a75f092d1d54ae2d64f266"
 dependencies = [
  "siphasher",
+]
+
+[[package]]
+name = "pickpic"
+version = "1.0.9"
+dependencies = [
+ "avif-decode",
+ "base64 0.22.1",
+ "blake3",
+ "chrono",
+ "fs2",
+ "image",
+ "resvg",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-dialog",
+ "tauri-plugin-drag",
+ "tauri-plugin-single-instance",
+ "tiny_http",
+ "tokio",
+ "ureq",
+ "uuid",
+ "walkdir",
+ "winreg 0.55.0",
 ]
 
 [[package]]

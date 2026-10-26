@@ -23,7 +23,7 @@ if (-not (Get-Command nasm -ErrorAction SilentlyContinue)) {
     Write-Error "未找到 NASM。请安装 NASM 并加入 PATH（AVIF 解码器编译需要）。"
 }
 
-$env:CARGO_TARGET_DIR = Join-Path $env:LOCALAPPDATA "image-vault-build"
+$env:CARGO_TARGET_DIR = Join-Path $env:LOCALAPPDATA "pickpic-build"
 Set-Location (Join-Path $PSScriptRoot "..")
 
 Write-Host "CARGO_TARGET_DIR = $env:CARGO_TARGET_DIR"

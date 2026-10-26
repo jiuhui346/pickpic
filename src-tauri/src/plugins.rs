@@ -21,7 +21,7 @@ pub struct PluginInfo {
 
 fn base_dir() -> PathBuf {
     let base = std::env::var("APPDATA").unwrap_or_else(|_| ".".to_string());
-    PathBuf::from(base).join("ImageVault")
+    PathBuf::from(base).join("PickPic")
 }
 
 pub fn plugins_dir() -> PathBuf {

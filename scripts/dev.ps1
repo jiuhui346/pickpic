@@ -18,7 +18,7 @@ foreach ($candidate in $nasmCandidates) {
     }
 }
 
-$env:CARGO_TARGET_DIR = Join-Path $env:LOCALAPPDATA "image-vault-build"
+$env:CARGO_TARGET_DIR = Join-Path $env:LOCALAPPDATA "pickpic-build"
 Set-Location (Join-Path $PSScriptRoot "..")
 
 npm run tauri dev @args

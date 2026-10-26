@@ -13,7 +13,8 @@ use tauri::{AppHandle, Emitter, State};
 use winreg::enums::{HKEY_CURRENT_USER, KEY_READ};
 use winreg::RegKey;
 
-const REG_SUBKEY: &str = "Software\\ImageVault";
+const REG_SUBKEY: &str = "Software\\PickPic";
+const LEGACY_REG_SUBKEY: &str = "Software\\ImageVault";
 const REG_VALUE: &str = "StorageRoot";
 const MIN_FREE: u64 = 100 * 1024 * 1024;
 
@@ -40,11 +41,23 @@ fn normalize_separators(input: &str) -> String {
     out
 }
 
-fn read_registered_root() -> Option<String> {
+fn read_key(subkey: &str) -> Option<String> {
     let key = RegKey::predef(HKEY_CURRENT_USER)
-        .open_subkey_with_flags(REG_SUBKEY, KEY_READ)
+        .open_subkey_with_flags(subkey, KEY_READ)
         .ok()?;
     key.get_value::<String, _>(REG_VALUE).ok()
+}
+
+fn read_registered_root() -> Option<String> {
+    if let Some(value) = read_key(REG_SUBKEY) {
+        return Some(value);
+    }
+    // Migrate the storage root pointer from legacy Image Vault.
+    if let Some(value) = read_key(LEGACY_REG_SUBKEY) {
+        let _ = write_registered_root(&value);
+        return Some(value);
+    }
+    None
 }
 
 fn write_registered_root(path: &str) -> AppResult<()> {
@@ -66,7 +79,7 @@ fn prepare_root(path: &str) -> AppResult<PathBuf> {
     if !p.is_absolute() {
         return Err(AppError::new(
             "INVALID_PATH",
-            "请填写绝对路径，例如 D:\\ImageVault",
+            "请填写绝对路径，例如 D:\\PickPic",
         ));
     }
     if p.is_file() {
@@ -76,7 +89,7 @@ fn prepare_root(path: &str) -> AppResult<PathBuf> {
         ));
     }
     fs::create_dir_all(fsutil::fs_path(&p)).map_err(|e| AppError::io("无法创建存储目录", e))?;
-    let probe = p.join(".image-vault-write-test");
+    let probe = p.join(".pickpic-write-test");
     fs::write(fsutil::fs_path(&probe), b"ok").map_err(|e| AppError::io("存储目录不可写", e))?;
     let _ = fs::remove_file(fsutil::fs_path(&probe));
 
@@ -295,11 +308,11 @@ pub async fn vault_migrate(
     }
 }
 
-/// 首次启动时建议的默认存储目录：`<用户目录>\Pictures\ImageVault`。
+/// 首次启动时建议的默认存储目录：`<用户目录>\Pictures\PickPic`。
 #[tauri::command]
 pub async fn suggested_vault_path() -> AppResult<String> {
     let home = std::env::var("USERPROFILE").unwrap_or_else(|_| "C:\\".to_string());
-    Ok(format!("{home}\\Pictures\\ImageVault"))
+    Ok(format!("{home}\\Pictures\\PickPic"))
 }
 
 fn collect_files(root: &Path, dir: &Path, out: &mut Vec<(PathBuf, String, u64)>) -> AppResult<()> {

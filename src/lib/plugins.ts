@@ -76,7 +76,7 @@ function buildApi(pluginId: string) {
   };
 }
 
-/** 加载所有已启用的插件（每个插件一个 Function 沙箱作用域，仅暴露 ImageVault API）。 */
+/** 加载所有已启用的插件（每个插件一个 Function 沙箱作用域，仅暴露 PickPic API）。 */
 export async function bootPlugins(): Promise<void> {
   if (booted) return;
   booted = true;
@@ -86,7 +86,7 @@ export async function bootPlugins(): Promise<void> {
       if (!plugin.enabled || plugin.error) continue;
       try {
         const code = await api.pluginCode(plugin.id);
-        const factory = new Function("ImageVault", `"use strict";\n${code}`);
+        const factory = new Function("PickPic", `"use strict";\n${code}`);
         factory(buildApi(plugin.id));
       } catch (error) {
         useStore.getState().pushToast({

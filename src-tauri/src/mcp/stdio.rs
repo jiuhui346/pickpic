@@ -1,5 +1,5 @@
 //! stdio 适配：把 MCP 的 stdio 请求转发到正在运行的应用 HTTP 端点。
-//! 用法：`image-vault.exe --mcp-stdio`
+//! 用法：`pickpic.exe --mcp-stdio`
 
 use serde_json::{json, Value};
 use std::io::{BufRead, Write};
@@ -7,13 +7,13 @@ use std::path::PathBuf;
 
 fn config_path() -> PathBuf {
     let base = std::env::var("APPDATA").unwrap_or_else(|_| ".".to_string());
-    PathBuf::from(base).join("ImageVault").join("mcp.json")
+    PathBuf::from(base).join("PickPic").join("mcp.json")
 }
 
 pub fn run() -> i32 {
     let path = config_path();
     let Ok(text) = std::fs::read_to_string(&path) else {
-        eprintln!("未找到 {}，请先在 Image Vault 设置里开启 MCP 接口", path.display());
+        eprintln!("未找到 {}，请先在 PickPic 设置里开启 MCP 接口", path.display());
         return 1;
     };
     let Ok(config) = serde_json::from_str::<Value>(&text) else {
@@ -44,7 +44,7 @@ pub fn run() -> i32 {
             Err(err) => json!({
                 "jsonrpc": "2.0",
                 "id": request_id,
-                "error": {"code": -32603, "message": format!("无法连接 Image Vault：{err}")}
+                "error": {"code": -32603, "message": format!("无法连接 PickPic：{err}")}
             })
             .to_string(),
         };

@@ -61,7 +61,7 @@ export function Onboarding() {
             图
           </span>
           <div>
-            <h1 className="text-[17px] font-semibold">欢迎使用 Image Vault</h1>
+            <h1 className="text-[17px] font-semibold">欢迎使用 拾图</h1>
             <p className="hint-text mt-0.5 text-[12px] text-muted">
               图片、缩略图和索引全部保存在你指定的目录里，软件不联网、不上传任何数据。
             </p>
@@ -74,7 +74,7 @@ export function Onboarding() {
             <TextInput
               value={path}
               onChange={setPath}
-              placeholder="例如 D:\\ImageVault"
+              placeholder="例如 D:\\PickPic"
               autoFocus
               onKeyDown={(event) => {
                 if (event.key === "Enter") void submit();

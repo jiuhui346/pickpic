@@ -1,4 +1,4 @@
-# Image Vault 图库
+# 拾图 PickPic
 
 Windows 本地图片库：拖入导入、缩略图网格、分类与标签、拖出到其他软件，全部数据保存在本机，不联网、不上传。
 
@@ -19,10 +19,10 @@ Windows 本地图片库：拖入导入、缩略图网格、分类与标签、拖
 
 `release/` 目录（不打进 git，建议上传到 GitHub Releases）：
 
-- `Image Vault_1.0.8_x64-setup.exe`（NSIS 安装包）
-- `Image Vault_1.0.8_x64_en-US.msi`（MSI 安装包）
+- `PickPic_1.0.9_x64-setup.exe`（NSIS 安装包）
+- `PickPic_1.0.9_x64_en-US.msi`（MSI 安装包）
 
-安装后从开始菜单或 `%LOCALAPPDATA%\Image Vault\image-vault.exe` 启动。
+安装后从开始菜单或 `%LOCALAPPDATA%\PickPic\pickpic.exe` 启动。
 
 ## 二、从源码开发
 
@@ -34,7 +34,7 @@ npm run app:dev      # 开发模式
 npm run build        # 打包 msi + nsis
 ```
 
-构建脚本会自动设置 `CARGO_TARGET_DIR=%LOCALAPPDATA%\image-vault-build` 并把 NASM 加进 PATH。
+构建脚本会自动设置 `CARGO_TARGET_DIR=%LOCALAPPDATA%\pickpic-build` 并把 NASM 加进 PATH。
 不要直接运行 `npm run tauri build`：项目路径含中文时 NASM 写不了中文 target 路径。
 
 更完整的构建坑（WiX/NSIS/镜像）见 `docs/开发文档.md`。
@@ -42,7 +42,7 @@ npm run build        # 打包 msi + nsis
 ## 三、目录结构
 
 ```
-image-vault/
+pickpic/
 ├─ src/                   React 前端
 ├─ src-tauri/             Rust / Tauri 后端
 ├─ plugins/               在线插件源（index.json + 各插件目录）
@@ -62,17 +62,17 @@ image-vault/
 ```
 
 整个目录可以整体拷贝/迁移；数据库里保存的是相对路径。
-存储目录指针在注册表 `HKCU\Software\ImageVault\StorageRoot`。
+存储目录指针在注册表 `HKCU\Software\PickPic\StorageRoot`。
 
 ## 五、GitHub 仓库与插件源
 
 ### 1. 创建仓库并推送
 
-1. 在 GitHub 新建一个空仓库，例如 `image-vault`，建议 **Public**（插件走 CDN 需要公开）。
+1. 在 GitHub 新建一个空仓库，例如 `pickpic`，建议 **Public**（插件走 CDN 需要公开）。
 2. 本地仓库已经初始化并提交，执行：
 
 ```powershell
-git remote add origin https://github.com/<你的用户名>/image-vault.git
+git remote add origin https://github.com/<你的用户名>/pickpic.git
 git branch -M main
 git push -u origin main
 ```
@@ -84,13 +84,13 @@ GitHub 直连不稳定时，先开代理/VPN；密码处填 Personal Access Toke
 推送成功后，把下面地址填到「设置 → 插件 → 在线插件源」：
 
 ```
-https://fastly.jsdelivr.net/gh/<你的用户名>/image-vault@main/plugins/index.json
+https://fastly.jsdelivr.net/gh/<你的用户名>/pickpic@main/plugins/index.json
 ```
 
 jsDelivr 在国内一般可直连；如果不行，可改用：
 
 ```
-https://gh-proxy.com/https://raw.githubusercontent.com/<你的用户名>/image-vault/main/plugins/index.json
+https://gh-proxy.com/https://raw.githubusercontent.com/<你的用户名>/pickpic/main/plugins/index.json
 ```
 
 填好后点「保存并刷新」，就能看到仓库里的插件并一键安装。插件默认禁用，启用后点「重新加载」生效。

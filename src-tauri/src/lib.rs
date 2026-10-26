@@ -1,4 +1,4 @@
-//! Image Vault —— 本地图库（Tauri 2 + React 18）。
+//! PickPic —— 本地图库（Tauri 2 + React 18）。
 
 mod commands;
 mod core;
@@ -12,12 +12,40 @@ mod state;
 use state::AppState;
 use tauri::Manager;
 
+/// Migrate legacy Image Vault AppData directory to PickPic.
+fn migrate_legacy_data() {
+    let Ok(base) = std::env::var("APPDATA") else { return };
+    let old = std::path::PathBuf::from(&base).join("ImageVault");
+    let new = std::path::PathBuf::from(&base).join("PickPic");
+    if !new.exists() && old.exists() {
+        if std::fs::rename(&old, &new).is_err() {
+            let _ = copy_dir(&old, &new);
+        }
+    }
+}
+
+fn copy_dir(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    std::fs::create_dir_all(dst)?;
+    for entry in std::fs::read_dir(src)? {
+        let entry = entry?;
+        let target = dst.join(entry.file_name());
+        if entry.path().is_dir() {
+            copy_dir(&entry.path(), &target)?;
+        } else {
+            std::fs::copy(entry.path(), target)?;
+        }
+    }
+    Ok(())
+}
+
 pub fn run_mcp_stdio() -> i32 {
+    migrate_legacy_data();
     mcp::stdio::run()
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    migrate_legacy_data();
     tauri::Builder::default()
         // 单实例必须最先注册：避免两个进程同时写同一个 SQLite。
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {

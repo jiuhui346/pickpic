@@ -42,7 +42,7 @@ pub struct McpStatus {
 
 fn config_path() -> PathBuf {
     let base = std::env::var("APPDATA").unwrap_or_else(|_| ".".to_string());
-    PathBuf::from(base).join("ImageVault").join("mcp.json")
+    PathBuf::from(base).join("PickPic").join("mcp.json")
 }
 
 fn write_config(enabled: bool, port: u16, token: &str) {
@@ -183,7 +183,7 @@ fn handle_request(app: &AppHandle, mut request: tiny_http::Request, token: &str)
         "initialize" => Ok(json!({
             "protocolVersion": params.get("protocolVersion").and_then(|v| v.as_str()).unwrap_or("2025-03-26"),
             "capabilities": {"tools": {}},
-            "serverInfo": {"name": "image-vault", "version": env!("CARGO_PKG_VERSION")}
+            "serverInfo": {"name": "pickpic", "version": env!("CARGO_PKG_VERSION")}
         })),
         "ping" => Ok(json!({})),
         "tools/list" => Ok(json!({"tools": tools::tools()})),

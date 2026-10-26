@@ -33,7 +33,7 @@ export function Sidebar() {
         <span className="flex h-6 w-6 items-center justify-center rounded-md bg-accent text-[12px] font-semibold text-white">
           图
         </span>
-        <span className="text-[14px] font-semibold">Image Vault</span>
+        <span className="text-[14px] font-semibold">拾图</span>
       </div>
 
       <nav className="flex-1 overflow-y-auto px-2 pb-2">

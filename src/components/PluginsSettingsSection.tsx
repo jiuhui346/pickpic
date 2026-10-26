@@ -239,7 +239,7 @@ export function PluginsSettingsSection() {
       </section>
 
       <p className="text-[11px] leading-4 text-muted">
-        插件目录：%APPDATA%\ImageVault\plugins；每个插件是含 plugin.json 与 main.js 的文件夹。
+        插件目录：%APPDATA%\PickPic\plugins；每个插件是含 plugin.json 与 main.js 的文件夹。
         插件是受信任的本地代码，安装前请确认来源。
       </p>
     </div>
