@@ -72,7 +72,7 @@ pickpic/
 2. 本地仓库已经初始化并提交，执行：
 
 ```powershell
-git remote add origin https://github.com/<你的用户名>/pickpic.git
+git remote add origin https://github.com/<jiuhui346>/pickpic.git
 git branch -M main
 git push -u origin main
 ```
@@ -84,13 +84,13 @@ GitHub 直连不稳定时，先开代理/VPN；密码处填 Personal Access Toke
 推送成功后，把下面地址填到「设置 → 插件 → 在线插件源」：
 
 ```
-https://fastly.jsdelivr.net/gh/<你的用户名>/pickpic@main/plugins/index.json
+https://fastly.jsdelivr.net/gh/<jiuhui346>/pickpic@main/plugins/index.json
 ```
 
 jsDelivr 在国内一般可直连；如果不行，可改用：
 
 ```
-https://gh-proxy.com/https://raw.githubusercontent.com/<你的用户名>/pickpic/main/plugins/index.json
+https://gh-proxy.com/https://raw.githubusercontent.com/<jiuhui346>/pickpic/main/plugins/index.json
 ```
 
 填好后点「保存并刷新」，就能看到仓库里的插件并一键安装。插件默认禁用，启用后点「重新加载」生效。

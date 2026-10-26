@@ -9,7 +9,7 @@ https://fastly.jsdelivr.net/gh/<GitHub用户名>/<仓库名>@main/plugins/index.
 也可以用 gh-proxy：
 
 ```
-https://gh-proxy.com/https://raw.githubusercontent.com/<用户名>/<仓库名>/main/plugins/index.json
+https://gh-proxy.com/https://raw.githubusercontent.com/jiuhui346/<仓库名>/main/plugins/index.json
 ```
 
 ## 插件结构
