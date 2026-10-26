@@ -2003,7 +2003,7 @@ dependencies = [
 
 [[package]]
 name = "image-vault"
-version = "1.0.7"
+version = "1.0.8"
 dependencies = [
  "avif-decode",
  "base64 0.22.1",
