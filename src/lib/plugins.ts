@@ -86,8 +86,9 @@ export async function bootPlugins(): Promise<void> {
       if (!plugin.enabled || plugin.error) continue;
       try {
         const code = await api.pluginCode(plugin.id);
-        const factory = new Function("PickPic", `"use strict";\n${code}`);
-        factory(buildApi(plugin.id));
+        const factory = new Function("PickPic", "ImageVault", `"use strict";\n${code}`);
+        const pluginApi = buildApi(plugin.id);
+        factory(pluginApi, pluginApi);
       } catch (error) {
         useStore.getState().pushToast({
           kind: "error",
