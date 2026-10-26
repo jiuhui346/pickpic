@@ -98,7 +98,7 @@ pickpic/
 ├─ src/              React frontend
 ├─ src-tauri/        Rust / Tauri backend
 ├─ plugins/          Online plugin index and plugin folders
-├─ docs/             User guide, developer docs, acceptance report
+├─ docs/             User guide
 ├─ scripts/          Build and dev scripts
 └─ release/          Installer output (git-ignored)
 ```
@@ -123,5 +123,4 @@ Vault layout:
 ## Documentation
 
 - [User guide (Chinese)](docs/使用说明.md)
-- [Developer documentation (Chinese)](docs/开发文档.md)
 - [Plugin format](plugins/README.md)
