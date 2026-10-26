@@ -1,30 +1,84 @@
-# 拾图 PickPic
+<div align="center">
 
-Windows 本地图片库：拖入导入、缩略图网格、分类与标签、拖出到其他软件，全部数据保存在本机，不联网、不上传。
+# 拾图 · 轻量化图片管理器
 
-技术栈：Tauri 2 + React 18 + TypeScript + Vite + Zustand + Tailwind CSS + SQLite（rusqlite）。
+**把图片收进一个轻巧的匣子。**
 
-## 功能特性
+本地、离线、不联网的 Windows 图片管理器 —— 拖进来、分好类、需要时拖出去。
 
-- 拖入导入：移动/复制、逐个命名、分类选择、标签选择、重复图片检测
-- 分类管理：多对多、右键/拖拽/批量归类、命名时直接选分类
-- 标签筛选：标签独立于分类，用于在分类内筛选；顶部筛选器重启后自动重置
-- 缩略图网格：虚拟滚动、异步缓存、滑动多选、整组拖出
-- 删除与批量操作：右键删除、批量删除、确认保护
-- 设置：存储目录迁移、拖入/拖出行为、缩略图尺寸、主题、简洁模式、动图预览、快捷键自定义
-- MCP 接口：本机 HTTP + stdio 适配，Agent 可执行全部图片/分类/标签/设置操作
-- 插件系统：插件目录 + plugin.json + main.js，可在软件内从 GitHub 插件源安装
+[![平台](https://img.shields.io/badge/platform-Windows%2010%20%2F%2011-1E9BFA?style=flat-square&logo=windows)](https://github.com/jiuhui346/pickpic/releases)
+[![版本](https://img.shields.io/github/v/release/jiuhui346/pickpic?style=flat-square&color=1E9BFA)](https://github.com/jiuhui346/pickpic/releases)
+[![技术栈](https://img.shields.io/badge/Tauri-2-24C8DB?style=flat-square&logo=tauri)](https://tauri.app)
+[![离线](https://img.shields.io/badge/offline-100%25-2ea44f?style=flat-square)](https://github.com/jiuhui346/pickpic)
 
-## 一、安装包
+[简体中文](./README.md) · [English](./README.en.md)
 
-`release/` 目录（不打进 git，建议上传到 GitHub Releases）：
+</div>
 
-- `PickPic_1.0.9_x64-setup.exe`（NSIS 安装包）
-- `PickPic_1.0.9_x64_en-US.msi`（MSI 安装包）
+![拾图主界面](docs/images/main-window.png)
 
-安装后从开始菜单或 `%LOCALAPPDATA%\PickPic\pickpic.exe` 启动。
+## 为什么是拾图
 
-## 二、从源码开发
+- **轻**：不装运行时、不联网、不注册账号；安装包不到 5 MB，空闲内存约 85 MB。
+- **快**：一万张图片的图库，滚动平均 6.1 ms/帧（P95 6.9 ms），冷启动约 1.1 秒。
+- **本地**：图片、缩略图、索引全部保存在你指定的目录，复制目录即可备份/换机。
+- **能长**：内置 MCP 接口和插件系统，后续功能以插件形式扩展，本体保持轻量。
+
+## 功能
+
+- **拖入导入**：从资源管理器拖图片或文件夹，支持移动/复制、逐个命名、批量导入。
+- **重复检测**：BLAKE3 内容哈希，导入前提示完全相同的图片，可选择跳过或仍然添加。
+- **分类 + 标签**：左侧分类管理归属，顶部标签在分类内筛选；标签重启后自动回到「不筛选」。
+- **缩略图网格**：虚拟滚动、512px 缓存、小/中/大三档；可选让 GIF / 动态 WebP 直接播放。
+- **选择与拖出**：单击/再点取消、Ctrl 滑动多选、整组拖到桌面/微信/PS/文件夹。
+- **删除保护**：右键或 `Delete` 删除，二次确认；支持批量操作。
+- **MCP 接口**：本机 HTTP + stdio，Agent 可执行导入、重命名、删除、导出、分类、标签、设置等操作。
+- **插件系统**：插件目录 + `plugin.json` + `main.js`，可在软件内从 GitHub 插件源一键安装。
+- **界面**：深色/浅色/跟随系统、简洁模式、自定义快捷键、图库目录迁移。
+
+## 下载
+
+> [!NOTE]
+> 安装包发布在 [GitHub Releases](https://github.com/jiuhui346/pickpic/releases)。
+> 第一次使用请先看 [使用说明](docs/使用说明.md)。
+
+| 文件 | 说明 |
+| --- | --- |
+| `PickPic_1.0.10_x64-setup.exe` | NSIS 安装包，推荐 |
+| `PickPic_1.0.10_x64_en-US.msi` | MSI 安装包，适合批量部署 |
+
+系统要求：Windows 10 / 11（x64），需要 WebView2 Runtime（Win11 自带，Win10 一般已随 Edge 安装）。
+
+## 快速开始
+
+1. 安装并打开「拾图」，选择一个存储目录（例如 `D:\图库`）。
+2. 从资源管理器把图片拖进窗口；在命名框里选分类、标签，回车确认。
+3. 在左侧建分类，在顶部按标签筛选；右键图片可以归类、打标签、删除。
+4. 需要用时，把图片直接拖到其他软件或文件夹。
+
+> 默认导入是**移动**（原文件进入图库），拖出是**复制**（库内保留）；可在设置 → 通用里修改。
+
+## 插件
+
+插件让本体保持轻量，功能按需下载：
+
+1. 设置 → 插件 → 在线插件源，填入：
+   `https://fastly.jsdelivr.net/gh/jiuhui346/pickpic@main/plugins/index.json`
+2. 点「保存并刷新」，在列表里点「安装」。
+3. 安装后默认禁用；启用后点「重新加载」生效。
+
+插件格式与开发说明见 [plugins/README.md](plugins/README.md)。插件 API 全局对象为 `PickPic`，旧版 `ImageVault` 别名仍可用。
+
+## MCP
+
+设置 → MCP 接口，开启后：
+
+- HTTP：`http://127.0.0.1:45871/mcp`（Bearer 令牌，可在设置里复制配置）
+- stdio：`pickpic.exe --mcp-stdio`（适合只支持命令行的 Agent）
+
+MCP 只监听本机回环地址，可以执行与界面相同的图片/分类/标签/设置操作。
+
+## 从源码构建
 
 前置：Node.js 18+、Rust（rustup + MSVC）、NASM、WebView2 Runtime。
 
@@ -35,96 +89,41 @@ npm run build        # 打包 msi + nsis
 ```
 
 构建脚本会自动设置 `CARGO_TARGET_DIR=%LOCALAPPDATA%\pickpic-build` 并把 NASM 加进 PATH。
-不要直接运行 `npm run tauri build`：项目路径含中文时 NASM 写不了中文 target 路径。
+不要直接执行 `npm run tauri build`：项目路径含中文时 NASM 无法写入中文 target 路径。
 
-更完整的构建坑（WiX/NSIS/镜像）见 `docs/开发文档.md`。
-
-## 三、目录结构
+## 目录结构
 
 ```
 pickpic/
-├─ src/                   React 前端
-├─ src-tauri/             Rust / Tauri 后端
-├─ plugins/               在线插件源（index.json + 各插件目录）
-├─ docs/                  开发文档 / 使用说明 / 验收报告
-├─ scripts/               构建与开发脚本
-├─ public/                静态资源
-└─ release/               安装包输出（git 忽略）
+├─ src/              React 前端
+├─ src-tauri/        Rust / Tauri 后端
+├─ plugins/          在线插件源（index.json + 各插件）
+├─ docs/             使用说明 / 开发文档 / 验收报告
+├─ scripts/          构建与开发脚本
+└─ release/          安装包输出（git 忽略）
 ```
 
-## 四、存储根目录布局
+存储目录：
 
 ```
-<存储根目录>/
-├─ vault.db          SQLite（图片元数据 / 分类 / 标签 / 设置）
-├─ thumbs/           缩略图缓存（512px，JPEG 或 PNG）
+<图库目录>/
+├─ vault.db          SQLite（图片、分类、标签、设置）
+├─ thumbs/           缩略图缓存
 └─ images/2026/10/   原图，按导入年月分目录
 ```
 
-整个目录可以整体拷贝/迁移；数据库里保存的是相对路径。
-存储目录指针在注册表 `HKCU\Software\PickPic\StorageRoot`。
+## 常见问题
 
-## 五、GitHub 仓库与插件源
+- **启动提示存储目录不可用**：目录被移动/删除或磁盘未插入；重新选择即可，原记录不会丢。
+- **拖入提示文件被占用**：先在原程序里关闭该文件再拖入。
+- **缩略图无法预览**：图片损坏或尺寸超过解码上限；原文件仍可拖出。
+- **安装包提示未知发布者**：当前安装包未签名，属正常现象。
+- **插件源读取失败**：确认地址以 `/plugins/index.json` 结尾、仓库为 Public、jsDelivr 缓存已刷新。
 
-### 1. 创建仓库并推送
+## 文档
 
-1. 在 GitHub 新建一个空仓库，例如 `pickpic`，建议 **Public**（插件走 CDN 需要公开）。
-2. 本地仓库已经初始化并提交，执行：
-
-```powershell
-git remote add origin https://github.com/<jiuhui346>/pickpic.git
-git branch -M main
-git push -u origin main
-```
-
-GitHub 直连不稳定时，先开代理/VPN；密码处填 Personal Access Token（不是账号密码）。
-
-### 2. 在软件里配置插件源
-
-推送成功后，把下面地址填到「设置 → 插件 → 在线插件源」：
-
-```
-https://fastly.jsdelivr.net/gh/<jiuhui346>/pickpic@main/plugins/index.json
-```
-
-jsDelivr 在国内一般可直连；如果不行，可改用：
-
-```
-https://gh-proxy.com/https://raw.githubusercontent.com/<jiuhui346>/pickpic/main/plugins/index.json
-```
-
-填好后点「保存并刷新」，就能看到仓库里的插件并一键安装。插件默认禁用，启用后点「重新加载」生效。
-
-### 3. 新增插件
-
-1. 在 `plugins/` 下新建以插件 id 命名的文件夹；
-2. 放入 `plugin.json` 与 `main.js`；
-3. 在 `plugins/index.json` 的 `plugins` 数组里加一条（id/name/version/description/files）；
-4. 提交并推送，软件里刷新在线插件源即可。
-
-详见 `plugins/README.md`。
-
-## 六、常用命令
-
-| 命令 | 作用 |
-| --- | --- |
-| `npm run app:dev` | 开发模式启动 |
-| `npm run build` | 打包安装包（msi + nsis） |
-| `npm run build:web` | 只构建前端 |
-| `cargo test`（在 `src-tauri`） | Rust 单元测试 |
-
-## 七、常见问题
-
-- **启动提示「存储目录不可用」**：目录被移动/删除，或所在磁盘未插入；重新指定即可，原记录不会丢。
-- **拖入提示「文件正在被其他程序占用」**：先在原程序里关闭该文件再拖入。
-- **缩略图显示「无法预览」**：图片损坏，或尺寸超过解码上限；原文件仍可正常拖出使用。
-- **杀毒软件提示未知发布者**：安装包未签名，属正常现象；可自行签名。
-- **插件源读取失败**：检查地址是否为 `.../plugins/index.json`、仓库是否公开、jsDelivr 缓存是否已刷新。
-
-## 八、文档
-
-- `docs/使用说明.md`：面向用户的功能说明
-- `docs/开发文档.md`：架构、模块、构建与实现细节
-- `docs/验收报告.md`：验收清单、性能数据与迭代记录
-- `plugins/README.md`：插件格式与插件源说明
-- `docs/GitHub上传指南.md`：从零创建仓库、推送、PAT、Releases 的步骤
+- [使用说明](docs/使用说明.md)
+- [开发文档](docs/开发文档.md)
+- [验收报告](docs/验收报告.md)
+- [插件格式](plugins/README.md)
+- [GitHub 上传指南](docs/GitHub上传指南.md)

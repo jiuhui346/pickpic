@@ -1,7 +1,7 @@
 [package]
 name = "pickpic"
-version = "1.0.9"
-description = "PickPic - local image library"
+version = "1.0.10"
+description = "PickPic - lightweight local image manager"
 authors = ["jiuhui"]
 edition = "2021"
 
