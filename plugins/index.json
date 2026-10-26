@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "plugins": [
+    {
+      "id": "example-stats",
+      "name": "图库统计",
+      "version": "1.0.0",
+      "description": "在工具栏加一个「图库统计」按钮，显示图片总数与总容量。",
+      "author": "jiuhui",
+      "homepage": "",
+      "files": ["plugin.json", "main.js"]
+    }
+  ]
+}
