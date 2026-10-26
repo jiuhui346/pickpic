@@ -19,8 +19,8 @@ Windows 本地图片库：拖入导入、缩略图网格、分类与标签、拖
 
 `release/` 目录（不打进 git，建议上传到 GitHub Releases）：
 
-- `Image Vault_1.0.7_x64-setup.exe`（NSIS 安装包）
-- `Image Vault_1.0.7_x64_en-US.msi`（MSI 安装包）
+- `Image Vault_1.0.8_x64-setup.exe`（NSIS 安装包）
+- `Image Vault_1.0.8_x64_en-US.msi`（MSI 安装包）
 
 安装后从开始菜单或 `%LOCALAPPDATA%\Image Vault\image-vault.exe` 启动。
 

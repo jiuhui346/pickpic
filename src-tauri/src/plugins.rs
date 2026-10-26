@@ -5,9 +5,7 @@ use serde::Serialize;
 use serde_json::Value;
 use std::collections::HashMap;
 use std::fs;
-use std::io::Read;
 use std::path::{Path, PathBuf};
-use std::time::Duration;
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -213,18 +211,26 @@ pub struct RemotePlugin {
 }
 
 fn http_get(url: &str, limit: u64) -> Result<String, String> {
-    let response = ureq::get(url)
-        .timeout(Duration::from_secs(20))
-        .set("User-Agent", concat!("ImageVault/", env!("CARGO_PKG_VERSION")))
-        .call()
-        .map_err(|e| format!("请求失败：{e}"))?;
-    let mut text = String::new();
-    response
-        .into_reader()
-        .take(limit)
-        .read_to_string(&mut text)
-        .map_err(|e| format!("读取失败：{e}"))?;
-    Ok(text)
+    // 用系统 curl：能正确处理 IPv4/IPv6 回退与 TLS，避免 ureq 在部分网络下连不上 CDN。
+    let output = std::process::Command::new("curl.exe")
+        .args([
+            "-fsSL",
+            "--max-time",
+            "20",
+            "--max-filesize",
+            &limit.to_string(),
+            url,
+        ])
+        .output()
+        .map_err(|e| format!("无法调用 curl：{e}"))?;
+    if !output.status.success() {
+        let message = String::from_utf8_lossy(&output.stderr).trim().to_string();
+        return Err(format!("请求失败：{message}"));
+    }
+    if output.stdout.len() as u64 > limit {
+        return Err("响应内容过大".to_string());
+    }
+    String::from_utf8(output.stdout).map_err(|e| format!("响应不是 UTF-8：{e}"))
 }
 
 /// 拉取插件源 index.json。
