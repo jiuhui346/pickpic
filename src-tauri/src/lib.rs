@@ -153,6 +153,7 @@ pub fn run() {
             commands::vault::app_exe_path,
             commands::images::images_list,
             commands::images::probe_paths,
+            commands::images::source_preview,
             commands::images::scan_folder,
             commands::images::import_one,
             commands::images::thumb_ensure,

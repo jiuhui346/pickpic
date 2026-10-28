@@ -64,6 +64,7 @@ export const api = {
     }
   },
   imagesList: () => call<ImageMeta[]>("images_list"),
+  sourcePreview: (path: string) => call<string>("source_preview", { path }),
   probePaths: (paths: string[]) => call<ProbeResult>("probe_paths", { paths }),
   scanFolder: (path: string) => call<string[]>("scan_folder", { path }),
   importOne: (source: string, name: string, mode: string) =>

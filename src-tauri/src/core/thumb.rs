@@ -1,5 +1,7 @@
 //! 缩略图生成：最长边 512px；带透明的存 PNG，其余存 JPEG(q85)。
 
+use base64::engine::general_purpose::STANDARD as BASE64;
+use base64::Engine;
 use crate::core::fsutil::fs_path;
 use crate::error::{AppError, AppResult};
 use image::{DynamicImage, RgbaImage};
@@ -209,4 +211,39 @@ fn decode_avif(path: &Path) -> AppResult<DynamicImage> {
         }
     };
     Ok(DynamicImage::ImageRgba8(rgba))
+}
+
+
+/// 生成用于导入命名框的预览图（data URL，最长边 480）。
+pub fn preview_data_url(source: &Path, ext: &str) -> AppResult<String> {
+    let decoded = decode(source, ext)?;
+    let resized = if decoded.width().max(decoded.height()) > 480 {
+        let scale = 480.0 / decoded.width().max(decoded.height()) as f32;
+        let w = ((decoded.width() as f32 * scale).round() as u32).max(1);
+        let h = ((decoded.height() as f32 * scale).round() as u32).max(1);
+        decoded.resize_exact(w, h, image::imageops::FilterType::Lanczos3)
+    } else {
+        decoded
+    };
+    let has_alpha = resized.color().has_alpha() && {
+        let rgba = resized.to_rgba8();
+        rgba.pixels().any(|p| p.0[3] < 255)
+    };
+    let mut buf = Vec::new();
+    let mime = if has_alpha {
+        resized
+            .to_rgba8()
+            .write_to(&mut Cursor::new(&mut buf), image::ImageFormat::Png)
+            .map_err(|e| AppError::new("PREVIEW", format!("预览编码失败：{e}")))?;
+        "image/png"
+    } else {
+        let rgb = resized.to_rgb8();
+        let mut cursor = Cursor::new(&mut buf);
+        let mut encoder = image::codecs::jpeg::JpegEncoder::new_with_quality(&mut cursor, 85);
+        encoder
+            .encode_image(&rgb)
+            .map_err(|e| AppError::new("PREVIEW", format!("预览编码失败：{e}")))?;
+        "image/jpeg"
+    };
+    Ok(format!("data:{mime};base64,{}", BASE64.encode(buf)))
 }

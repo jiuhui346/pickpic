@@ -3,6 +3,7 @@ import { useStore } from "../store/useStore";
 import { Button, Modal, TextInput } from "./ui";
 import { Picker } from "./Picker";
 import { fileNameOf } from "../lib/format";
+import { api } from "../lib/ipc";
 
 function sanitizePreview(name: string, fallback: string): string {
   let value = name.trim();
@@ -35,7 +36,28 @@ export function NamingDialog() {
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [tagId, setTagId] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewError, setPreviewError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!task) return;
+    let alive = true;
+    setPreviewUrl(null);
+    setPreviewError(false);
+    void api
+      .sourcePreview(task.source)
+      .then((url) => {
+        if (alive) setPreviewUrl(url);
+      })
+      .catch(() => {
+        if (alive) setPreviewError(true);
+      });
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [task?.source]);
 
   useEffect(() => {
     if (!task) return;
@@ -106,6 +128,20 @@ export function NamingDialog() {
           <div className="hint-text mt-1">
             {mode === "move" ? "导入后原文件将被移动" : "导入后原文件保留"}
           </div>
+        </div>
+
+        <div className="relative overflow-hidden rounded-md border border-line bg-panel2">
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              alt={fileNameOf(task.source)}
+              className="max-h-[220px] w-full object-contain"
+            />
+          ) : (
+            <div className="flex h-[150px] items-center justify-center text-[11px] text-muted">
+              {previewError ? "无法预览这张图片" : "正在加载预览…"}
+            </div>
+          )}
         </div>
 
         <Picker

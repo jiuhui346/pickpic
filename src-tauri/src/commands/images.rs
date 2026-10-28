@@ -354,3 +354,17 @@ pub async fn export_images(
 ) -> AppResult<manage_core::ExportOutcome> {
     manage_core::export_images(&state, &ids, &target_dir, &mode)
 }
+
+/// 读取任意源文件的预览图（导入命名框用）。
+#[tauri::command]
+pub async fn source_preview(path: String) -> AppResult<String> {
+    let file = PathBuf::from(&path);
+    let ext = meta::ext_of(&file).ok_or_else(|| AppError::new("PREVIEW", "无法识别图片格式"))?;
+    if !meta::is_supported(&ext) {
+        return Err(AppError::new("PREVIEW", "不支持的图片格式"));
+    }
+    if !file.is_file() {
+        return Err(AppError::new("PREVIEW", "源文件不存在"));
+    }
+    thumb_core::preview_data_url(&file, &ext)
+}
