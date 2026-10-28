@@ -46,8 +46,8 @@
 
 | 文件 | 说明 |
 | --- | --- |
-| `PickPic_1.0.12_x64-setup.exe` | NSIS 安装包，推荐 |
-| `PickPic_1.0.12_x64_en-US.msi` | MSI 安装包，适合批量部署 |
+| `PickPic_1.0.13_x64-setup.exe` | NSIS 安装包，推荐 |
+| `PickPic_1.0.13_x64_en-US.msi` | MSI 安装包，适合批量部署 |
 
 系统要求：Windows 10 / 11（x64），需要 WebView2 Runtime（Win11 自带，Win10 一般已随 Edge 安装）。
 

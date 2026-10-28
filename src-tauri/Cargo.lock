@@ -2914,7 +2914,7 @@ dependencies = [
 
 [[package]]
 name = "pickpic"
-version = "1.0.12"
+version = "1.0.13"
 dependencies = [
  "avif-decode",
  "base64 0.22.1",
