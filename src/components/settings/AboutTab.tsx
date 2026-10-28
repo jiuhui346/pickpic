@@ -12,7 +12,7 @@ export function AboutTab() {
     <div className="space-y-6">
       <SettingsSection title="拾图" description="PickPic · 本地图库 · 完全离线，不上传任何数据">
         <Row label="版本">
-          <span className="text-[12px] text-muted">v1.0.11</span>
+          <span className="text-[12px] text-muted">v1.1.0</span>
         </Row>
         <Row label="图库目录" hint={vault?.root}>
           <span className="text-[12px] text-muted">SQLite + 原图 + 缩略图</span>

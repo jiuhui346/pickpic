@@ -28,15 +28,17 @@ A local, offline Windows image manager — drag in, organize, drag out when you 
 
 ## Features
 
-- **Drag-in import** — drop images or folders from Explorer; move or copy, rename one by one or import in bulk.
+- **Drag-in import** — drop images or folders from Explorer; move or copy, rename one by one or import in bulk, with a large preview of the current image in the naming dialog.
 - **Duplicate detection** — BLAKE3 content hashes warn you before importing an identical image; skip it or keep it.
-- **Categories + tags** — categories decide where an image lives; tags filter inside a category and reset to "no filter" after restart.
-- **Thumbnail grid** — virtual scrolling, 512 px cache, small/medium/large; optionally play GIF and animated WebP thumbnails.
+- **Minimal UI** — only images by default; hover the left or right edge to slide out the category or view panel, and it closes when the pointer leaves the window.
+- **Categories + tags** — categories decide where an image lives; the right-hand panel filters by tag and resets to "no filter" after restart.
+- **Search** — filter the current view by filename keyword from the right-hand panel, with one-click clear.
+- **Grid / masonry** — equal-width grid or an aspect-ratio-preserving masonry flow; virtual scrolling, 512 px cache and Ctrl+wheel zoom.
 - **Selection and drag-out** — click to select, click again to deselect, Ctrl-drag to sweep, drag a whole group to Explorer, WeChat, Photoshop or any folder.
 - **Safe deletion** — right-click or press `Delete`, with confirmation; batch operations supported.
 - **MCP server** — local HTTP + stdio so agents can import, rename, delete, export, manage categories/tags and change settings.
 - **Plugin system** — `plugin.json` + `main.js`; install plugins from a GitHub-hosted index inside the app.
-- **Interface** — dark/light/system theme, compact mode, custom shortcuts, vault migration.
+- **Interface** — dark/light/system theme, compact mode, switchable grid/masonry layout, custom shortcuts, vault migration.
 - **Tray and global hotkey** — closing the window hides it to the tray (menu to show or quit); press `Ctrl + Alt + P` (configurable in Settings) anywhere to bring the window back.
 
 ## Download
@@ -47,8 +49,8 @@ A local, offline Windows image manager — drag in, organize, drag out when you 
 
 | File | Notes |
 | --- | --- |
-| `PickPic_1.0.15_x64-setup.exe` | NSIS installer, recommended |
-| `PickPic_1.0.15_x64_en-US.msi` | MSI installer for managed deployment |
+| `PickPic_1.1.0_x64-setup.exe` | NSIS installer, recommended |
+| `PickPic_1.1.0_x64_en-US.msi` | MSI installer for managed deployment |
 
 Requirements: Windows 10 / 11 (x64) with WebView2 Runtime (bundled with Windows 11; usually present on Windows 10 via Edge).
 
