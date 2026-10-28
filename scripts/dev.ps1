@@ -6,8 +6,9 @@ if (Test-Path $cargoBin) {
     $env:PATH = "$cargoBin;$env:PATH"
 }
 
-$nasmCandidates = @(
-    "H:\ai\tools\nasm\nasm-2.16.03",
+$nasmCandidates = @()
+if ($env:NASM_HOME) { $nasmCandidates += $env:NASM_HOME }
+$nasmCandidates += @(
     "$env:ProgramFiles\NASM",
     "${env:ProgramFiles(x86)}\NASM"
 )

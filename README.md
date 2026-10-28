@@ -56,7 +56,7 @@
 
 ## 快速开始
 
-1. 安装并打开「拾图」，选择一个存储目录（例如 `D:\图库`）。
+1. 安装并打开「拾图」，选择一个存储目录（例如 `D:\Pictures\PickPic`）。
 2. 从资源管理器把图片拖进窗口；在命名框里选分类、标签，回车确认。
 3. 在左侧建分类，在顶部按标签筛选；右键图片可以归类、打标签、删除。
 4. 需要用时，把图片直接拖到其他软件或文件夹。
@@ -85,7 +85,7 @@ MCP 只监听本机回环地址，可以执行与界面相同的图片/分类/�
 
 ## 从源码构建
 
-前置：Node.js 18+、Rust（rustup + MSVC）、NASM、WebView2 Runtime。
+前置：Node.js 18+、Rust（rustup + MSVC）、NASM、WebView2 Runtime。NASM 不在 PATH 时，设置环境变量 `NASM_HOME` 指向其安装目录。
 
 ```powershell
 npm install

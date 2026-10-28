@@ -85,7 +85,7 @@ The server listens on loopback only and exposes the same image, category, tag an
 
 ## Build from source
 
-Prerequisites: Node.js 18+, Rust (rustup + MSVC), NASM, WebView2 Runtime.
+Prerequisites: Node.js 18+, Rust (rustup + MSVC), NASM, WebView2 Runtime. If NASM is not on PATH, set `NASM_HOME` to its install directory.
 
 ```powershell
 npm install
