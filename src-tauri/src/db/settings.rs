@@ -57,6 +57,9 @@ pub fn load(conn: &Connection) -> Settings {
     if let Some(v) = get(conn, "animate_thumbs") {
         s.animate_thumbs = v == "1";
     }
+    if let Some(v) = get(conn, "global_shortcut") {
+        s.global_shortcut = v;
+    }
     if let Some(v) = get(conn, "mcp_enabled") {
         s.mcp_enabled = v == "1";
     }
@@ -85,6 +88,7 @@ pub fn save(conn: &Connection, s: &Settings) -> AppResult<()> {
         ("shortcuts", s.shortcuts.clone()),
         ("hide_hints", if s.hide_hints { "1" } else { "0" }.to_string()),
         ("animate_thumbs", if s.animate_thumbs { "1" } else { "0" }.to_string()),
+        ("global_shortcut", s.global_shortcut.clone()),
         ("mcp_enabled", if s.mcp_enabled { "1" } else { "0" }.to_string()),
         ("mcp_port", s.mcp_port.to_string()),
         ("mcp_token", s.mcp_token.clone()),

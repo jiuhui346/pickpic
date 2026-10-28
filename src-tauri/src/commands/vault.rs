@@ -126,6 +126,7 @@ fn open_vault(state: &AppState, root: &Path) -> AppResult<VaultInfo> {
         *s = settings.clone();
     }
     let _ = crate::mcp::apply(&state.app, &settings);
+    let _ = crate::global_shortcut::apply(&state.app, &settings.global_shortcut);
     Ok(VaultInfo {
         root: root.to_string_lossy().to_string(),
         image_count: count,

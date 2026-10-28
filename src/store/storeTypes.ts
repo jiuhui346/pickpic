@@ -22,6 +22,7 @@ export const DEFAULT_SETTINGS: Settings = {
   shortcuts: serializeShortcuts(DEFAULT_SHORTCUTS),
   hideHints: false,
   animateThumbs: false,
+  globalShortcut: "Ctrl+Alt+P",
   mcpEnabled: false,
   mcpPort: 45871,
   mcpToken: "",

@@ -58,6 +58,8 @@ pub struct Settings {
     pub hide_hints: bool,
     /// 网格中直接播放动图（GIF / 动态 WebP）
     pub animate_thumbs: bool,
+    /// 全局呼出快捷键（如 Ctrl+Alt+P）
+    pub global_shortcut: String,
     /// 本地 MCP 服务开关
     pub mcp_enabled: bool,
     pub mcp_port: u16,
@@ -78,6 +80,7 @@ impl Default for Settings {
             shortcuts: default_shortcuts(),
             hide_hints: false,
             animate_thumbs: false,
+            global_shortcut: "Ctrl+Alt+P".into(),
             mcp_enabled: false,
             mcp_port: 45871,
             mcp_token: String::new(),
@@ -98,6 +101,7 @@ pub struct SettingsPatch {
     pub shortcuts: Option<String>,
     pub hide_hints: Option<bool>,
     pub animate_thumbs: Option<bool>,
+    pub global_shortcut: Option<String>,
     pub mcp_enabled: Option<bool>,
     pub mcp_port: Option<u16>,
     pub mcp_token: Option<String>,
@@ -145,6 +149,11 @@ impl Settings {
         }
         if let Some(v) = patch.animate_thumbs {
             self.animate_thumbs = v;
+        }
+        if let Some(v) = &patch.global_shortcut {
+            if v.len() <= 64 {
+                self.global_shortcut = v.clone();
+            }
         }
         if let Some(v) = patch.mcp_enabled {
             self.mcp_enabled = v;

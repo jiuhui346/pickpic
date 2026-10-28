@@ -4,6 +4,7 @@ mod commands;
 mod core;
 mod db;
 mod error;
+mod global_shortcut;
 mod mcp;
 mod models;
 mod plugins;
@@ -14,7 +15,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::menu::{MenuBuilder, MenuItemBuilder};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::Manager;
-use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, Modifiers, Shortcut, ShortcutState};
+use tauri_plugin_global_shortcut::ShortcutState;
 
 static QUITTING: AtomicBool = AtomicBool::new(false);
 
@@ -94,9 +95,8 @@ pub fn run() {
             let state = AppState::new(app.handle().clone());
             app.manage(state);
 
-            // 全局快捷键：Ctrl+Alt+P 呼出主界面
-            let shortcut = Shortcut::new(Some(Modifiers::CONTROL | Modifiers::ALT), Code::KeyP);
-            if let Err(err) = app.global_shortcut().register(shortcut) {
+            // 全局快捷键：默认 Ctrl+Alt+P，图库打开后会应用保存的设置
+            if let Err(err) = crate::global_shortcut::apply(app.handle(), "Ctrl+Alt+P") {
                 eprintln!("global shortcut register failed: {err}");
             }
 
@@ -105,7 +105,7 @@ pub fn run() {
             let quit_item = MenuItemBuilder::with_id("quit", "退出拾图").build(app)?;
             let menu = MenuBuilder::new(app).items(&[&show_item, &quit_item]).build()?;
             let mut tray_builder = TrayIconBuilder::with_id("main-tray")
-                .tooltip("拾图 · Ctrl+Alt+P 呼出")
+                .tooltip("拾图 · 关闭窗口会留在托盘")
                 .menu(&menu)
                 .show_menu_on_left_click(false)
                 .on_menu_event(|app, event| match event.id().as_ref() {

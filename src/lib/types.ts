@@ -77,6 +77,7 @@ export interface Settings {
   hideHints: boolean;
   /** 网格中直接播放动图 */
   animateThumbs: boolean;
+  globalShortcut: string;
   mcpEnabled: boolean;
   mcpPort: number;
   mcpToken: string;

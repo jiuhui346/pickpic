@@ -17,6 +17,7 @@ export function ShortcutsTab() {
   const setSettings = useStore((s) => s.setSettings);
   const [shortcutMap, setShortcutMap] = useState(() => parseShortcuts(settings.shortcuts));
   const [recording, setRecording] = useState<ShortcutAction | null>(null);
+  const [recordingGlobal, setRecordingGlobal] = useState(false);
 
   useEffect(() => {
     setShortcutMap(parseShortcuts(settings.shortcuts));
@@ -42,6 +43,31 @@ export function ShortcutsTab() {
     return () => window.removeEventListener("keydown", onKey, true);
   }, [recording, shortcutMap, setSettings]);
 
+  useEffect(() => {
+    if (!recordingGlobal) return;
+    const onKey = (event: KeyboardEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.key === "Escape") {
+        setRecordingGlobal(false);
+        return;
+      }
+      const combo = comboFromEvent(event);
+      if (!combo) return;
+      if (!/(Ctrl|Alt|Meta)/.test(combo)) {
+        useStore.getState().pushToast({
+          kind: "error",
+          message: "全局快捷键至少需要 Ctrl、Alt 或 Win 修饰键",
+        });
+        return;
+      }
+      setRecordingGlobal(false);
+      void setSettings({ globalShortcut: combo });
+    };
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
+  }, [recordingGlobal, setSettings]);
+
   const reset = () => {
     setShortcutMap({ ...DEFAULT_SHORTCUTS });
     void setSettings({ shortcuts: serializeShortcuts(DEFAULT_SHORTCUTS) });
@@ -61,12 +87,19 @@ export function ShortcutsTab() {
         <div className="min-w-0">
           <div className="text-[12px]">呼出主界面（全局）</div>
           <div className="hint-text text-[11px] text-muted">
-            窗口关闭并隐藏到托盘后仍然有效
+            窗口隐藏到托盘后仍然有效；点击右侧按键可修改
           </div>
         </div>
-        <span className="shrink-0 rounded-md border border-line bg-panel2 px-2 py-1 text-[11px] text-fg">
-          Ctrl + Alt + P
-        </span>
+        <button
+          className={`h-7 min-w-[96px] shrink-0 rounded-md border px-2 text-[11px] transition-colors ${
+            recordingGlobal
+              ? "border-accent text-accent"
+              : "border-line bg-panel2 text-fg hover:border-accent/50"
+          }`}
+          onClick={() => setRecordingGlobal(true)}
+        >
+          {recordingGlobal ? "按下按键…" : formatCombo(settings.globalShortcut)}
+        </button>
       </div>
       {SHORTCUT_META.map((item) => (
         <div
