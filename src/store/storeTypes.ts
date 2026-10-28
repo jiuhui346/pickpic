@@ -16,6 +16,7 @@ export const DEFAULT_SETTINGS: Settings = {
   importMode: "move",
   exportMode: "copy",
   thumbSize: "small",
+  thumbPx: 190,
   theme: "dark",
   sortField: "imported",
   sortDesc: true,

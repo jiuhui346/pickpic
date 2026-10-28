@@ -8,12 +8,9 @@ import { Tile } from "./Tile";
 import { ContextMenu } from "./ContextMenu";
 import { EmptyState } from "./EmptyState";
 
-const SIZES = {
-  small: { tile: 150, label: 0, gap: 12 },
-  medium: { tile: 190, label: 0, gap: 12 },
-  large: { tile: 230, label: 0, gap: 14 },
-} as const;
-
+const MIN_TILE = 110;
+const MAX_TILE = 340;
+const TILE_GAP = 12;
 const PAD_X = 18;
 const PAD_Y = 18;
 
@@ -31,6 +28,9 @@ export function Grid({ onPreview }: GridProps) {
 
   const [scrollEl, setScrollEl] = useState<HTMLDivElement | null>(null);
   const [scrollTop, setScrollTop] = useState(0);
+  const [zoom, setZoom] = useState(settings.thumbPx);
+  const zoomRef = useRef(settings.thumbPx);
+  const zoomSaveTimer = useRef<number | undefined>(undefined);
   const [viewport, setViewport] = useState({ width: 0, height: 0 });
   const [menu, setMenu] = useState<{ x: number; y: number; id: number } | null>(null);
   const [ghost, setGhost] = useState<{ x: number; y: number; count: number } | null>(null);
@@ -50,12 +50,12 @@ export function Grid({ onPreview }: GridProps) {
     useStore.getState().setVisibleIds(filtered.map((image) => image.id));
   }, [filtered]);
 
-  const size = SIZES[settings.thumbSize];
+  const tile = zoom;
   const columns = Math.max(
     1,
-    Math.floor((viewport.width - PAD_X * 2 + size.gap) / (size.tile + size.gap)),
+    Math.floor((viewport.width - PAD_X * 2 + TILE_GAP) / (tile + TILE_GAP)),
   );
-  const rowHeight = size.tile + size.label + size.gap;
+  const rowHeight = tile + TILE_GAP;
   const rows = Math.ceil(filtered.length / columns);
   const totalHeight = rows * rowHeight + PAD_Y * 2;
 
@@ -82,6 +82,35 @@ export function Grid({ onPreview }: GridProps) {
     const observer = new ResizeObserver(update);
     observer.observe(scrollEl);
     return () => observer.disconnect();
+  }, [scrollEl]);
+
+  useEffect(() => {
+    zoomRef.current = settings.thumbPx;
+    setZoom(settings.thumbPx);
+  }, [settings.thumbPx]);
+
+  // Ctrl + 滚轮调整缩略图大小（110–340，多档步进）
+  useEffect(() => {
+    if (!scrollEl) return;
+    const onWheel = (event: WheelEvent) => {
+      if (!event.ctrlKey) return;
+      event.preventDefault();
+      const step = event.deltaY < 0 ? 10 : -10;
+      const current = zoomRef.current;
+      const next = Math.min(MAX_TILE, Math.max(MIN_TILE, current + step));
+      if (next === current) return;
+      zoomRef.current = next;
+      setZoom(next);
+      if (zoomSaveTimer.current) window.clearTimeout(zoomSaveTimer.current);
+      zoomSaveTimer.current = window.setTimeout(() => {
+        void useStore.getState().setSettings({ thumbPx: next });
+      }, 180);
+    };
+    scrollEl.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      scrollEl.removeEventListener("wheel", onWheel);
+      if (zoomSaveTimer.current) window.clearTimeout(zoomSaveTimer.current);
+    };
   }, [scrollEl]);
 
 
@@ -243,13 +272,13 @@ export function Grid({ onPreview }: GridProps) {
             <Tile
               key={image.id}
               image={image}
-              tileSize={size.tile}
-              labelHeight={size.label}
-              left={PAD_X + (index % columns) * (size.tile + size.gap)}
+              tileSize={tile}
+              labelHeight={0}
+              left={PAD_X + (index % columns) * (tile + TILE_GAP)}
               top={PAD_Y + Math.floor(index / columns) * rowHeight}
               selected={selection.includes(image.id)}
               focused={focusId === image.id}
-              showMeta={settings.thumbSize !== "small"}
+              showMeta={tile >= 200}
               onPointerDown={handlePointerDown}
               onContextMenu={handleContextMenu}
               onOpen={(id) => {

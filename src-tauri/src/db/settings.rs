@@ -57,6 +57,17 @@ pub fn load(conn: &Connection) -> Settings {
     if let Some(v) = get(conn, "animate_thumbs") {
         s.animate_thumbs = v == "1";
     }
+    if let Some(v) = get(conn, "thumb_px") {
+        if let Ok(px) = v.parse::<u16>() {
+            s.thumb_px = px.clamp(100, 400);
+        }
+    } else {
+        s.thumb_px = match s.thumb_size.as_str() {
+            "small" => 150,
+            "large" => 230,
+            _ => 190,
+        };
+    }
     if let Some(v) = get(conn, "global_shortcut") {
         s.global_shortcut = v;
     }
@@ -88,6 +99,7 @@ pub fn save(conn: &Connection, s: &Settings) -> AppResult<()> {
         ("shortcuts", s.shortcuts.clone()),
         ("hide_hints", if s.hide_hints { "1" } else { "0" }.to_string()),
         ("animate_thumbs", if s.animate_thumbs { "1" } else { "0" }.to_string()),
+        ("thumb_px", s.thumb_px.to_string()),
         ("global_shortcut", s.global_shortcut.clone()),
         ("mcp_enabled", if s.mcp_enabled { "1" } else { "0" }.to_string()),
         ("mcp_port", s.mcp_port.to_string()),

@@ -1,5 +1,5 @@
 import { useStore } from "../../store/useStore";
-import type { Theme, ThumbSize } from "../../lib/types";
+import type { Theme } from "../../lib/types";
 import { Button } from "../ui";
 import { Row, Segmented, SettingsSection } from "./controls";
 
@@ -10,18 +10,7 @@ export function AppearanceTab() {
 
   return (
     <div className="space-y-6">
-      <SettingsSection title="网格" description="缩略图大小与动图播放">
-        <Row label="缩略图尺寸">
-          <Segmented<ThumbSize>
-            value={settings.thumbSize}
-            options={[
-              { value: "small", label: "小" },
-              { value: "medium", label: "中" },
-              { value: "large", label: "大" },
-            ]}
-            onChange={(value) => void setSettings({ thumbSize: value })}
-          />
-        </Row>
+      <SettingsSection title="网格" description="在网格中按住 Ctrl 滚动滚轮调整缩略图大小（110–340）">
         <Row label="动图预览" hint="网格中直接播放 GIF / 动态 WebP（较大动图可能影响滚动）">
           <Button
             variant={settings.animateThumbs ? "primary" : "secondary"}

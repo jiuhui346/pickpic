@@ -49,6 +49,7 @@ pub struct Settings {
     pub import_mode: String,
     pub export_mode: String,
     pub thumb_size: String,
+    pub thumb_px: u16,
     pub theme: String,
     pub sort_field: String,
     pub sort_desc: bool,
@@ -74,6 +75,7 @@ impl Default for Settings {
             import_mode: "move".into(),
             export_mode: "copy".into(),
             thumb_size: "small".into(),
+            thumb_px: 190,
             theme: "dark".into(),
             sort_field: "imported".into(),
             sort_desc: true,
@@ -95,6 +97,7 @@ pub struct SettingsPatch {
     pub import_mode: Option<String>,
     pub export_mode: Option<String>,
     pub thumb_size: Option<String>,
+    pub thumb_px: Option<u16>,
     pub theme: Option<String>,
     pub sort_field: Option<String>,
     pub sort_desc: Option<bool>,
@@ -120,6 +123,9 @@ impl Settings {
             if v == "copy" || v == "move" {
                 self.export_mode = v.clone();
             }
+        }
+        if let Some(v) = patch.thumb_px {
+            self.thumb_px = v.clamp(100, 400);
         }
         if let Some(v) = &patch.thumb_size {
             if ["small", "medium", "large"].contains(&v.as_str()) {

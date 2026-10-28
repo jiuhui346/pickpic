@@ -68,6 +68,7 @@ export interface Settings {
   importMode: ImportMode;
   exportMode: ExportMode;
   thumbSize: ThumbSize;
+  thumbPx: number;
   theme: Theme;
   sortField: SortField;
   sortDesc: boolean;
