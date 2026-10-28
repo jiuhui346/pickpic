@@ -5,9 +5,9 @@ import { useStore, tasksFromPaths } from "./store/useStore";
 import { api } from "./lib/ipc";
 import type { AppError, ImageMeta, ProbeResult } from "./lib/types";
 import { Sidebar } from "./components/Sidebar";
-import { Toolbar } from "./components/Toolbar";
+import { EdgePanel } from "./components/EdgePanel";
+import { RightDock } from "./components/RightDock";
 import { Grid } from "./components/Grid";
-import { StatusBar } from "./components/StatusBar";
 import { NamingDialog } from "./components/NamingDialog";
 import { SettingsPanel } from "./components/SettingsPanel";
 import { Preview } from "./components/Preview";
@@ -141,15 +141,20 @@ function MainWindow() {
   };
 
   return (
-    <div className="flex h-full min-h-0">
-      <Sidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <Toolbar onOpenSettings={() => setSettingsOpen(true)} />
-        <Banner />
-        <div className="min-h-0 flex-1">
-          <Grid onPreview={(items, index) => setPreview({ items, index })} />
+    <div className="relative h-full min-h-0 overflow-hidden bg-bg">
+      <Grid onPreview={(items, index) => setPreview({ items, index })} />
+
+      <EdgePanel side="left" width={240}>
+        <Sidebar />
+      </EdgePanel>
+      <EdgePanel side="right" width={320}>
+        <RightDock onOpenSettings={() => setSettingsOpen(true)} />
+      </EdgePanel>
+
+      <div className="pointer-events-none absolute inset-x-0 top-3 z-20 flex justify-center">
+        <div className="pointer-events-auto w-[min(680px,90%)]">
+          <Banner />
         </div>
-        <StatusBar />
       </div>
 
       <NamingDialog />

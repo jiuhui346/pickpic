@@ -75,7 +75,7 @@ export const Tile = memo(function Tile({
 
   return (
     <div
-      className="absolute select-none"
+      className="group absolute select-none"
       style={{ left, top, width: tileSize, height: tileSize + labelHeight }}
       onPointerDown={(event) => onPointerDown(event, image.id)}
       onContextMenu={(event) => onContextMenu(event, image.id)}
@@ -125,17 +125,16 @@ export const Tile = memo(function Tile({
             缺失
           </span>
         )}
-      </div>
-
-      <div className="mt-1.5 px-0.5" style={{ height: labelHeight - 6 }}>
-        <div className="truncate text-[12px] leading-4 text-fg" title={image.fileName}>
-          {image.fileName}
-        </div>
-        {showMeta && (
-          <div className="hint-text truncate text-[11px] leading-4 text-muted">
-            {dims} · {formatSize(image.sizeBytes)}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-1 bg-gradient-to-t from-black/80 via-black/35 to-transparent px-2 pb-2 pt-7 opacity-0 transition duration-150 group-hover:translate-y-0 group-hover:opacity-100">
+          <div className="truncate text-[11px] leading-4 text-white" title={image.fileName}>
+            {image.fileName}
           </div>
-        )}
+          {showMeta && (
+            <div className="truncate text-[10px] leading-4 text-white/65">
+              {dims} · {formatSize(image.sizeBytes)}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

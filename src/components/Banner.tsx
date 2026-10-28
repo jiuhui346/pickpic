@@ -37,7 +37,7 @@ export function Banner() {
   };
 
   return (
-    <div className="flex h-10 shrink-0 items-center gap-3 border-b border-line bg-[var(--accent-weak)] px-4 text-[12px]">
+    <div className="flex min-h-10 items-center gap-3 rounded-lg border border-line bg-[var(--accent-weak)] px-4 py-2 text-[12px] shadow-[var(--shadow)]">
       <IconImage size={14} className="text-accent" />
       <span className="flex-1 truncate">{banner.message}</span>
       <Button variant="secondary" onClick={() => void importAll()} disabled={busy}>

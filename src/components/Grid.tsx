@@ -9,13 +9,13 @@ import { ContextMenu } from "./ContextMenu";
 import { EmptyState } from "./EmptyState";
 
 const SIZES = {
-  small: { tile: 160, label: 34, gap: 16 },
-  medium: { tile: 200, label: 50, gap: 16 },
-  large: { tile: 240, label: 50, gap: 16 },
+  small: { tile: 150, label: 0, gap: 12 },
+  medium: { tile: 190, label: 0, gap: 12 },
+  large: { tile: 230, label: 0, gap: 14 },
 } as const;
 
-const PAD_X = 24;
-const PAD_Y = 20;
+const PAD_X = 18;
+const PAD_Y = 18;
 
 interface GridProps {
   onPreview: (items: ImageMeta[], index: number) => void;

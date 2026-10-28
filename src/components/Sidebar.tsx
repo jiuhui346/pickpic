@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useStore } from "../store/useStore";
 import type { Category } from "../lib/types";
+import { formatSize } from "../lib/format";
 import { IconEdit, IconPlus, IconTrash } from "./icons";
 import { ContextMenu } from "./ContextMenu";
 import { CategoryDialog } from "./CategoryDialog";
@@ -19,6 +20,18 @@ export function Sidebar() {
   const [menu, setMenu] = useState<{ x: number; y: number; category: Category } | null>(null);
 
   const uncategorized = images.filter((image) => image.categories.length === 0).length;
+  const filtered = images.filter((image) => {
+    if (activeCat === "all") return true;
+    if (activeCat === "uncat") return image.categories.length === 0;
+    return image.categories.includes(activeCat);
+  });
+  const totalBytes = filtered.reduce((sum, image) => sum + image.sizeBytes, 0);
+  const categoryName =
+    typeof activeCat === "number"
+      ? categories.find((category) => category.id === activeCat)?.name ?? "分类"
+      : activeCat === "uncat"
+        ? "未分类"
+        : "全部图片";
 
   const itemClass = (active: boolean) =>
     `group flex w-full items-center gap-2 rounded-md px-3 h-9 text-[13px] transition-colors duration-150 ${
@@ -28,7 +41,7 @@ export function Sidebar() {
     } ${internalDrag ? "ring-1 ring-transparent hover:ring-accent/50" : ""}`;
 
   return (
-    <aside className="flex w-[220px] shrink-0 flex-col border-r border-line bg-panel">
+    <div className="flex h-full min-h-0 flex-col">
       <div className="flex h-12 shrink-0 items-center gap-2 px-4">
         <span className="flex h-6 w-6 items-center justify-center rounded-md bg-accent text-[12px] font-semibold text-white">
           图
@@ -82,8 +95,12 @@ export function Sidebar() {
         </button>
       </nav>
 
-      <div className="shrink-0 border-t border-line px-3 py-2">
-        <div className="truncate text-[11px] text-muted" title={vault?.root ?? ""}>
+      <div className="shrink-0 border-t border-line px-4 py-3">
+        <div className="flex items-center justify-between text-[11px] text-muted">
+          <span className="truncate">{categoryName} · {filtered.length} 张</span>
+          <span className="shrink-0">{formatSize(totalBytes)}</span>
+        </div>
+        <div className="mt-1 truncate text-[10px] text-muted" title={vault?.root ?? ""}>
           {vault?.root ?? ""}
         </div>
       </div>
@@ -130,6 +147,6 @@ export function Sidebar() {
           onClose={() => setDialog(null)}
         />
       )}
-    </aside>
+    </div>
   );
 }
