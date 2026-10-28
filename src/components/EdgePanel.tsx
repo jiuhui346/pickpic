@@ -28,6 +28,29 @@ export function EdgePanel({ side, width, children }: EdgePanelProps) {
 
   useEffect(() => () => cancel(), []);
 
+  // 鼠标直接移出软件窗口时，panel 自身的 mouseleave 不一定触发，补全局监听
+  useEffect(() => {
+    if (!open) return;
+    const closeNow = () => setOpen(false);
+    const schedule = () => {
+      cancel();
+      timer.current = window.setTimeout(closeNow, 220);
+    };
+    const onWindowOut = (event: MouseEvent) => {
+      if (!event.relatedTarget) schedule();
+    };
+    const onDocumentLeave = () => schedule();
+    const onWindowBlur = () => closeNow();
+    document.documentElement.addEventListener("mouseleave", onDocumentLeave);
+    window.addEventListener("mouseout", onWindowOut);
+    window.addEventListener("blur", onWindowBlur);
+    return () => {
+      document.documentElement.removeEventListener("mouseleave", onDocumentLeave);
+      window.removeEventListener("mouseout", onWindowOut);
+      window.removeEventListener("blur", onWindowBlur);
+    };
+  }, [open]);
+
   const edge = side === "left" ? "left-0" : "right-0";
   const transform = open
     ? "translate-x-0"
