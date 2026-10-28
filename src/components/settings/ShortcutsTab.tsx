@@ -57,6 +57,17 @@ export function ShortcutsTab() {
         </button>
       }
     >
+      <div className="flex items-center justify-between gap-3 border-b border-line/60 py-2.5">
+        <div className="min-w-0">
+          <div className="text-[12px]">呼出主界面（全局）</div>
+          <div className="hint-text text-[11px] text-muted">
+            窗口关闭并隐藏到托盘后仍然有效
+          </div>
+        </div>
+        <span className="shrink-0 rounded-md border border-line bg-panel2 px-2 py-1 text-[11px] text-fg">
+          Ctrl + Alt + P
+        </span>
+      </div>
       {SHORTCUT_META.map((item) => (
         <div
           key={item.action}

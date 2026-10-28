@@ -10,7 +10,31 @@ mod plugins;
 mod state;
 
 use state::AppState;
+use std::sync::atomic::{AtomicBool, Ordering};
+use tauri::menu::{MenuBuilder, MenuItemBuilder};
+use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::Manager;
+use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, Modifiers, Shortcut, ShortcutState};
+
+static QUITTING: AtomicBool = AtomicBool::new(false);
+
+fn show_main(app: &tauri::AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.show();
+        let _ = window.unminimize();
+        let _ = window.set_focus();
+    }
+}
+
+fn checkpoint_vault(app: &tauri::AppHandle) {
+    if let Some(state) = app.try_state::<AppState>() {
+        if let Ok(guard) = state.vault.lock() {
+            if let Some(vault) = guard.as_ref() {
+                db::checkpoint(&vault.conn);
+            }
+        }
+    }
+}
 
 /// Migrate legacy Image Vault AppData directory to PickPic.
 fn migrate_legacy_data() {
@@ -57,19 +81,64 @@ pub fn run() {
         }))
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_drag::init())
+        .plugin(
+            tauri_plugin_global_shortcut::Builder::new()
+                .with_handler(|app, _shortcut, event| {
+                    if event.state() == ShortcutState::Pressed {
+                        show_main(app);
+                    }
+                })
+                .build(),
+        )
         .setup(|app| {
             let state = AppState::new(app.handle().clone());
             app.manage(state);
+
+            // 全局快捷键：Ctrl+Alt+P 呼出主界面
+            let shortcut = Shortcut::new(Some(Modifiers::CONTROL | Modifiers::ALT), Code::KeyP);
+            if let Err(err) = app.global_shortcut().register(shortcut) {
+                eprintln!("global shortcut register failed: {err}");
+            }
+
+            // 托盘：关闭窗口时隐藏，托盘图标/菜单恢复
+            let show_item = MenuItemBuilder::with_id("show", "显示拾图").build(app)?;
+            let quit_item = MenuItemBuilder::with_id("quit", "退出拾图").build(app)?;
+            let menu = MenuBuilder::new(app).items(&[&show_item, &quit_item]).build()?;
+            let mut tray_builder = TrayIconBuilder::with_id("main-tray")
+                .tooltip("拾图 · Ctrl+Alt+P 呼出")
+                .menu(&menu)
+                .show_menu_on_left_click(false)
+                .on_menu_event(|app, event| match event.id().as_ref() {
+                    "show" => show_main(app),
+                    "quit" => {
+                        checkpoint_vault(app);
+                        QUITTING.store(true, Ordering::SeqCst);
+                        app.exit(0);
+                    }
+                    _ => {}
+                })
+                .on_tray_icon_event(|tray, event| {
+                    if let TrayIconEvent::Click {
+                        button: MouseButton::Left,
+                        button_state: MouseButtonState::Up,
+                        ..
+                    } = event
+                    {
+                        show_main(tray.app_handle());
+                    }
+                });
+            if let Some(icon) = app.default_window_icon() {
+                tray_builder = tray_builder.icon(icon.clone());
+            }
+            let _tray = tray_builder.build(app)?;
             Ok(())
         })
         .on_window_event(|window, event| {
-            if let tauri::WindowEvent::CloseRequested { .. } = event {
-                if let Some(state) = window.app_handle().try_state::<AppState>() {
-                    if let Ok(guard) = state.vault.lock() {
-                        if let Some(vault) = guard.as_ref() {
-                            db::checkpoint(&vault.conn);
-                        }
-                    }
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                checkpoint_vault(window.app_handle());
+                if !QUITTING.load(Ordering::SeqCst) && window.label() == "main" {
+                    api.prevent_close();
+                    let _ = window.hide();
                 }
             }
         })

@@ -37,6 +37,7 @@
 - **MCP 接口**：本机 HTTP + stdio，Agent 可执行导入、重命名、删除、导出、分类、标签、设置等操作。
 - **插件系统**：插件目录 + `plugin.json` + `main.js`，可在软件内从 GitHub 插件源一键安装。
 - **界面**：深色/浅色/跟随系统、简洁模式、自定义快捷键、图库目录迁移。
+- **托盘与全局呼出**：关闭窗口隐藏到托盘（菜单可显示/退出），`Ctrl + Alt + P` 随时呼出主界面。
 
 ## 下载
 
@@ -46,8 +47,8 @@
 
 | 文件 | 说明 |
 | --- | --- |
-| `PickPic_1.0.13_x64-setup.exe` | NSIS 安装包，推荐 |
-| `PickPic_1.0.13_x64_en-US.msi` | MSI 安装包，适合批量部署 |
+| `PickPic_1.0.14_x64-setup.exe` | NSIS 安装包，推荐 |
+| `PickPic_1.0.14_x64_en-US.msi` | MSI 安装包，适合批量部署 |
 
 系统要求：Windows 10 / 11（x64），需要 WebView2 Runtime（Win11 自带，Win10 一般已随 Edge 安装）。
 

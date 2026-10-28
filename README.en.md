@@ -37,6 +37,7 @@ A local, offline Windows image manager — drag in, organize, drag out when you 
 - **MCP server** — local HTTP + stdio so agents can import, rename, delete, export, manage categories/tags and change settings.
 - **Plugin system** — `plugin.json` + `main.js`; install plugins from a GitHub-hosted index inside the app.
 - **Interface** — dark/light/system theme, compact mode, custom shortcuts, vault migration.
+- **Tray and global hotkey** — closing the window hides it to the tray (menu to show or quit); press `Ctrl + Alt + P` anywhere to bring the window back.
 
 ## Download
 
@@ -46,8 +47,8 @@ A local, offline Windows image manager — drag in, organize, drag out when you 
 
 | File | Notes |
 | --- | --- |
-| `PickPic_1.0.13_x64-setup.exe` | NSIS installer, recommended |
-| `PickPic_1.0.13_x64_en-US.msi` | MSI installer for managed deployment |
+| `PickPic_1.0.14_x64-setup.exe` | NSIS installer, recommended |
+| `PickPic_1.0.14_x64_en-US.msi` | MSI installer for managed deployment |
 
 Requirements: Windows 10 / 11 (x64) with WebView2 Runtime (bundled with Windows 11; usually present on Windows 10 via Edge).
 
