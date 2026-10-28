@@ -9,6 +9,8 @@ import { IconBroken } from "./icons";
 interface TileProps {
   image: ImageMeta;
   tileSize: number;
+  width?: number;
+  height?: number;
   labelHeight: number;
   left: number;
   top: number;
@@ -24,6 +26,8 @@ interface TileProps {
 export const Tile = memo(function Tile({
   image,
   tileSize,
+  width,
+  height,
   labelHeight,
   left,
   top,
@@ -70,13 +74,16 @@ export const Tile = memo(function Tile({
 
   const url = useOriginal ? originalUrl : info?.url;
 
+  const boxWidth = width ?? tileSize;
+  const boxHeight = height ?? tileSize;
+
   const dims =
     image.width && image.height ? `${image.width}×${image.height}` : "尺寸未知";
 
   return (
     <div
       className="group absolute select-none"
-      style={{ left, top, width: tileSize, height: tileSize + labelHeight }}
+      style={{ left, top, width: boxWidth, height: boxHeight + labelHeight }}
       onPointerDown={(event) => onPointerDown(event, image.id)}
       onContextMenu={(event) => onContextMenu(event, image.id)}
       onDoubleClick={() => onOpen(image.id)}
@@ -90,7 +97,7 @@ export const Tile = memo(function Tile({
               ? "border-accent/60"
               : "border-line hover:border-muted/60"
         } ${image.missing ? "opacity-45" : ""}`}
-        style={{ width: tileSize, height: tileSize }}
+        style={{ width: boxWidth, height: boxHeight }}
       >
         {url === undefined && (
           <div className="skeleton h-full w-full bg-[color-mix(in_srgb,var(--muted)_18%,transparent)]" />

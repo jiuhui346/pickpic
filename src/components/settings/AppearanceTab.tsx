@@ -1,5 +1,5 @@
 import { useStore } from "../../store/useStore";
-import type { Theme } from "../../lib/types";
+import type { LayoutMode, Theme } from "../../lib/types";
 import { Button } from "../ui";
 import { Row, Segmented, SettingsSection } from "./controls";
 
@@ -11,6 +11,16 @@ export function AppearanceTab() {
   return (
     <div className="space-y-6">
       <SettingsSection title="网格" description="在网格中按住 Ctrl 滚动滚轮调整缩略图大小（110–340）">
+        <Row label="布局" hint="网格：等宽预览；流式：按原图比例错落排列">
+          <Segmented<LayoutMode>
+            value={settings.layoutMode}
+            options={[
+              { value: "grid", label: "网格" },
+              { value: "masonry", label: "流式" },
+            ]}
+            onChange={(value) => void setSettings({ layoutMode: value })}
+          />
+        </Row>
         <Row label="动图预览" hint="网格中直接播放 GIF / 动态 WebP（较大动图可能影响滚动）">
           <Button
             variant={settings.animateThumbs ? "primary" : "secondary"}

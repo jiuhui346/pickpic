@@ -2,6 +2,7 @@ export type ImportMode = "move" | "copy";
 export type ExportMode = "copy" | "move";
 export type Theme = "dark" | "light" | "system";
 export type ThumbSize = "small" | "medium" | "large";
+export type LayoutMode = "grid" | "masonry";
 export type SortField = "name" | "size" | "mtime" | "imported" | "ext";
 
 export interface ImageMeta {
@@ -69,6 +70,7 @@ export interface Settings {
   exportMode: ExportMode;
   thumbSize: ThumbSize;
   thumbPx: number;
+  layoutMode: LayoutMode;
   theme: Theme;
   sortField: SortField;
   sortDesc: boolean;

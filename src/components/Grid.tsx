@@ -25,6 +25,7 @@ export function Grid({ onPreview }: GridProps) {
   const selection = useStore((s) => s.selection);
   const focusId = useStore((s) => s.focusId);
   const tagFilter = useStore((s) => s.tagFilter);
+  const searchQuery = useStore((s) => s.searchQuery);
 
   const [scrollEl, setScrollEl] = useState<HTMLDivElement | null>(null);
   const [scrollTop, setScrollTop] = useState(0);
@@ -37,27 +38,65 @@ export function Grid({ onPreview }: GridProps) {
   const drag = useGridDrag(setGhost);
 
   const filtered = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
     const list = images.filter((image) => {
+      if (query && !image.fileName.toLowerCase().includes(query) && !image.baseName.toLowerCase().includes(query)) {
+        return false;
+      }
       if (tagFilter !== null && !image.tags.includes(tagFilter)) return false;
       if (activeCat === "all") return true;
       if (activeCat === "uncat") return image.categories.length === 0;
       return image.categories.includes(activeCat);
     });
     return sortImages(list, settings.sortField, settings.sortDesc);
-  }, [images, activeCat, tagFilter, settings.sortField, settings.sortDesc]);
+  }, [images, activeCat, tagFilter, searchQuery, settings.sortField, settings.sortDesc]);
 
   useEffect(() => {
     useStore.getState().setVisibleIds(filtered.map((image) => image.id));
   }, [filtered]);
 
   const tile = zoom;
-  const columns = Math.max(
+  const isMasonry = settings.layoutMode === "masonry";
+  const gridColumns = Math.max(
     1,
     Math.floor((viewport.width - PAD_X * 2 + TILE_GAP) / (tile + TILE_GAP)),
   );
   const rowHeight = tile + TILE_GAP;
-  const rows = Math.ceil(filtered.length / columns);
-  const totalHeight = rows * rowHeight + PAD_Y * 2;
+  const rows = Math.ceil(filtered.length / gridColumns);
+
+  // 流式瀑布布局：固定列宽，按原图比例计算高度，塞进当前最短的列
+  const masonry = useMemo(() => {
+    if (!isMasonry) return null;
+    const gap = 6;
+    const available = Math.max(200, viewport.width - PAD_X * 2);
+    const target = Math.min(320, Math.max(160, tile));
+    const cols = Math.max(1, Math.floor((available + gap) / (target + gap)));
+    const colWidth = (available - gap * (cols - 1)) / cols;
+    const heights = new Array(cols).fill(PAD_Y);
+    const items = filtered.map((image, index) => {
+      const ratio =
+        image.width && image.height && image.height > 0
+          ? image.width / image.height
+          : 1;
+      const height = Math.max(70, Math.round(colWidth / ratio));
+      let col = 0;
+      for (let i = 1; i < cols; i += 1) {
+        if (heights[i] < heights[col]) col = i;
+      }
+      const x = PAD_X + col * (colWidth + gap);
+      const y = heights[col];
+      heights[col] += height + gap;
+      return { image, index, x, y, width: colWidth, height };
+    });
+    return {
+      items,
+      cols,
+      height: Math.max(...heights, PAD_Y) + PAD_Y,
+    };
+  }, [isMasonry, filtered, viewport.width, tile]);
+
+  const columns = masonry?.cols ?? gridColumns;
+  const totalHeight = masonry ? masonry.height : rows * rowHeight + PAD_Y * 2;
 
   const startRow = Math.max(0, Math.floor((scrollTop - PAD_Y) / rowHeight) - 2);
   const endRow = Math.min(
@@ -66,13 +105,22 @@ export function Grid({ onPreview }: GridProps) {
   );
 
   const visible: { image: ImageMeta; index: number }[] = [];
-  for (let row = startRow; row < endRow; row += 1) {
-    for (let col = 0; col < columns; col += 1) {
-      const index = row * columns + col;
-      if (index >= filtered.length) break;
-      visible.push({ image: filtered[index], index });
+  if (!masonry) {
+    for (let row = startRow; row < endRow; row += 1) {
+      for (let col = 0; col < columns; col += 1) {
+        const index = row * columns + col;
+        if (index >= filtered.length) break;
+        visible.push({ image: filtered[index], index });
+      }
     }
   }
+  const masonryVisible = masonry
+    ? masonry.items.filter(
+        (item) =>
+          item.y + item.height >= scrollTop - 300 &&
+          item.y <= scrollTop + viewport.height + 300,
+      )
+    : [];
 
   useEffect(() => {
     if (!scrollEl) return;
@@ -250,7 +298,17 @@ export function Grid({ onPreview }: GridProps) {
   }
 
   if (filtered.length === 0) {
-    return <EmptyState title="这里还没有图片" subtitle="把图片拖进来，或用右键把已有图片归入这个分类" />;
+    const query = searchQuery.trim();
+    return (
+      <EmptyState
+        title={query ? "没有找到匹配的图片" : "这里还没有图片"}
+        subtitle={
+          query
+            ? `没有文件名包含「${query}」的图片`
+            : "把图片拖进来，或用右键把已有图片归入这个分类"
+        }
+      />
+    );
   }
 
   const menuImage = menu ? images.find((image) => image.id === menu.id) : null;
@@ -268,25 +326,47 @@ export function Grid({ onPreview }: GridProps) {
         className="relative h-full overflow-y-auto outline-none"
       >
         <div style={{ height: totalHeight, position: "relative" }}>
-          {visible.map(({ image, index }) => (
-            <Tile
-              key={image.id}
-              image={image}
-              tileSize={tile}
-              labelHeight={0}
-              left={PAD_X + (index % columns) * (tile + TILE_GAP)}
-              top={PAD_Y + Math.floor(index / columns) * rowHeight}
-              selected={selection.includes(image.id)}
-              focused={focusId === image.id}
-              showMeta={tile >= 200}
-              onPointerDown={handlePointerDown}
-              onContextMenu={handleContextMenu}
-              onOpen={(id) => {
-                const idx = filtered.findIndex((item) => item.id === id);
-                if (idx >= 0) onPreview(filtered, idx);
-              }}
-            />
-          ))}
+          {masonry
+            ? masonryVisible.map((item) => (
+                <Tile
+                  key={item.image.id}
+                  image={item.image}
+                  tileSize={tile}
+                  width={item.width}
+                  height={item.height}
+                  labelHeight={0}
+                  left={item.x}
+                  top={item.y}
+                  selected={selection.includes(item.image.id)}
+                  focused={focusId === item.image.id}
+                  showMeta={false}
+                  onPointerDown={handlePointerDown}
+                  onContextMenu={handleContextMenu}
+                  onOpen={(id) => {
+                    const idx = filtered.findIndex((image) => image.id === id);
+                    if (idx >= 0) onPreview(filtered, idx);
+                  }}
+                />
+              ))
+            : visible.map(({ image, index }) => (
+                <Tile
+                  key={image.id}
+                  image={image}
+                  tileSize={tile}
+                  labelHeight={0}
+                  left={PAD_X + (index % columns) * (tile + TILE_GAP)}
+                  top={PAD_Y + Math.floor(index / columns) * rowHeight}
+                  selected={selection.includes(image.id)}
+                  focused={focusId === image.id}
+                  showMeta={tile >= 200}
+                  onPointerDown={handlePointerDown}
+                  onContextMenu={handleContextMenu}
+                  onOpen={(id) => {
+                    const idx = filtered.findIndex((item) => item.id === id);
+                    if (idx >= 0) onPreview(filtered, idx);
+                  }}
+                />
+              ))}
         </div>
       </div>
 

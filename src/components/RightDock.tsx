@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useStore } from "../store/useStore";
 import { formatSize } from "../lib/format";
 import type { SortField } from "../lib/types";
-import { IconArrowDown, IconArrowUp, IconCheck, IconGear } from "./icons";
+import { IconArrowDown, IconArrowUp, IconCheck, IconClose, IconGear, IconSearch } from "./icons";
 import { Button } from "./ui";
 
 const SORT_LABELS: { field: SortField; label: string }[] = [
@@ -19,6 +19,8 @@ export function RightDock({ onOpenSettings }: { onOpenSettings: () => void }) {
   const setSettings = useStore((s) => s.setSettings);
   const tags = useStore((s) => s.tags);
   const tagFilter = useStore((s) => s.tagFilter);
+  const searchQuery = useStore((s) => s.searchQuery);
+  const setSearchQuery = useStore((s) => s.setSearchQuery);
   const setTagFilter = useStore((s) => s.setTagFilter);
   const images = useStore((s) => s.images);
   const categories = useStore((s) => s.categories);
@@ -29,7 +31,11 @@ export function RightDock({ onOpenSettings }: { onOpenSettings: () => void }) {
   const [sortOpen, setSortOpen] = useState(false);
   const [tagOpen, setTagOpen] = useState(false);
 
+  const query = searchQuery.trim().toLowerCase();
   const filtered = images.filter((image) => {
+    if (query && !image.fileName.toLowerCase().includes(query) && !image.baseName.toLowerCase().includes(query)) {
+      return false;
+    }
     if (tagFilter !== null && !image.tags.includes(tagFilter)) return false;
     if (activeCat === "all") return true;
     if (activeCat === "uncat") return image.categories.length === 0;
@@ -55,6 +61,27 @@ export function RightDock({ onOpenSettings }: { onOpenSettings: () => void }) {
       </header>
 
       <div className="flex-1 space-y-4 overflow-y-auto px-4 py-5">
+        <div className="relative">
+          <IconSearch
+            size={14}
+            className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted"
+          />
+          <input
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder="搜索图片名…"
+            className="h-9 w-full rounded-md border border-line bg-panel2 pl-8 pr-8 text-[12px] outline-none transition-colors focus:border-accent"
+          />
+          {searchQuery && (
+            <button
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted hover:text-fg"
+              onClick={() => setSearchQuery("")}
+            >
+              <IconClose size={13} />
+            </button>
+          )}
+        </div>
+
         <section>
           <button
             className="flex h-9 w-full items-center justify-between rounded-md border border-line bg-panel2 px-3 text-[12px] transition-colors hover:border-accent/40"

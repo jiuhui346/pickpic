@@ -17,6 +17,7 @@ export const DEFAULT_SETTINGS: Settings = {
   exportMode: "copy",
   thumbSize: "small",
   thumbPx: 190,
+  layoutMode: "grid",
   theme: "dark",
   sortField: "imported",
   sortDesc: true,
@@ -40,6 +41,7 @@ export interface AppStore {
   categories: Category[];
   tags: Tag[];
   tagFilter: number | null;
+  searchQuery: string;
   tagEditor: number[] | null;
   pluginButtons: { id: string; label: string; onClick: () => void }[];
   activeCat: "all" | "uncat" | number;
@@ -83,6 +85,7 @@ export interface AppStore {
   resolveDuplicate: (keep: boolean) => Promise<void>;
   setLastTag: (tagId: number | null) => void;
   setTagFilter: (tagId: number | null) => void;
+  setSearchQuery: (query: string) => void;
   openTagEditor: (ids: number[]) => void;
   closeTagEditor: () => void;
   addPluginButton: (button: { id: string; label: string; onClick: () => void }) => void;

@@ -105,3 +105,10 @@ export const IconShield = (props: IconProps) => (
     <path d="m9 12 2 2 4-4" />
   </svg>
 );
+
+export const IconSearch = (props: IconProps) => (
+  <svg {...base(props)}>
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </svg>
+);

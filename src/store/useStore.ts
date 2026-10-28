@@ -28,6 +28,7 @@ export const useStore = create<AppStore>()((set, get) => ({
   categories: [],
   tags: [],
   tagFilter: null,
+  searchQuery: "",
   tagEditor: null,
   pluginButtons: [],
   activeCat: "all",
@@ -279,6 +280,9 @@ export const useStore = create<AppStore>()((set, get) => ({
   setLastTag: (tagId) => set({ lastTagId: tagId }),
 
   setTagFilter: (tagId) => set({ tagFilter: tagId }),
+
+  setSearchQuery: (query) =>
+    set({ searchQuery: query, selection: [], focusId: null }),
 
   openTagEditor: (ids) => {
     if (ids.length > 0) set({ tagEditor: ids });
