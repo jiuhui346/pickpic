@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="src-tauri/icons/128x128.png" width="96" height="96" alt="PickPic icon">
+
 # PickPic · Lightweight Image Manager
 
 **A small, tidy box for your pictures.**
@@ -44,8 +46,8 @@ A local, offline Windows image manager — drag in, organize, drag out when you 
 
 | File | Notes |
 | --- | --- |
-| `PickPic_1.0.11_x64-setup.exe` | NSIS installer, recommended |
-| `PickPic_1.0.11_x64_en-US.msi` | MSI installer for managed deployment |
+| `PickPic_1.0.12_x64-setup.exe` | NSIS installer, recommended |
+| `PickPic_1.0.12_x64_en-US.msi` | MSI installer for managed deployment |
 
 Requirements: Windows 10 / 11 (x64) with WebView2 Runtime (bundled with Windows 11; usually present on Windows 10 via Edge).
 

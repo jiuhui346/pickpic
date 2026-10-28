@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="src-tauri/icons/128x128.png" width="96" height="96" alt="拾图图标">
+
 # 拾图 · 轻量化图片管理器
 
 **把图片收进一个轻巧的匣子。**
@@ -44,8 +46,8 @@
 
 | 文件 | 说明 |
 | --- | --- |
-| `PickPic_1.0.11_x64-setup.exe` | NSIS 安装包，推荐 |
-| `PickPic_1.0.11_x64_en-US.msi` | MSI 安装包，适合批量部署 |
+| `PickPic_1.0.12_x64-setup.exe` | NSIS 安装包，推荐 |
+| `PickPic_1.0.12_x64_en-US.msi` | MSI 安装包，适合批量部署 |
 
 系统要求：Windows 10 / 11（x64），需要 WebView2 Runtime（Win11 自带，Win10 一般已随 Edge 安装）。
 
