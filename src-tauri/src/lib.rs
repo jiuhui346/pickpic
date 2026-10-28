@@ -130,7 +130,9 @@ pub fn run() {
             if let Some(icon) = app.default_window_icon() {
                 tray_builder = tray_builder.icon(icon.clone());
             }
-            let _tray = tray_builder.build(app)?;
+            let tray = tray_builder.build(app)?;
+            // TrayIcon 在 Drop 时会移除图标，必须保持存活
+            std::mem::forget(tray);
             Ok(())
         })
         .on_window_event(|window, event| {
