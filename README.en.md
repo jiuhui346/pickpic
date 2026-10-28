@@ -21,7 +21,7 @@ A local, offline Windows image manager — drag in, organize, drag out when you 
 
 ## Why PickPic
 
-- **Light** — no runtime, no account, no network. The installer is under 5 MB and idle memory is about 85 MB.
+- **Light** — no runtime, no account, no network. The NSIS installer is about 5.0 MB (MSI about 6.9 MB); the main process idles around 30 MB, with WebView2 renderer processes on top.
 - **Fast** — with 10,000 images, scrolling averages 6.1 ms per frame (P95 6.9 ms); cold start is about 1.1 s.
 - **Local** — images, thumbnails and metadata live in a folder you choose. Copy the folder to back up or move machines.
 - **Extensible** — a built-in MCP server and plugin system keep the core small while features grow as plugins.
@@ -49,8 +49,8 @@ A local, offline Windows image manager — drag in, organize, drag out when you 
 
 | File | Notes |
 | --- | --- |
-| `PickPic_1.1.0_x64-setup.exe` | NSIS installer, recommended |
-| `PickPic_1.1.0_x64_en-US.msi` | MSI installer for managed deployment |
+| `PickPic_1.1.0_x64-setup.exe` | NSIS installer (about 5.0 MB), recommended |
+| `PickPic_1.1.0_x64_en-US.msi` | MSI installer (about 6.9 MB) for managed deployment |
 
 Requirements: Windows 10 / 11 (x64) with WebView2 Runtime (bundled with Windows 11; usually present on Windows 10 via Edge).
 
