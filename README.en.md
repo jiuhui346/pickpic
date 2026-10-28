@@ -125,6 +125,21 @@ Vault layout:
 - **"Unknown publisher" in the installer** — the installer is currently unsigned; this is expected.
 - **Plugin source fails to load** — make sure the URL ends with `/plugins/index.json`, the repository is public, and jsDelivr has refreshed its cache.
 
+## Roadmap
+
+PickPic will stay lightweight, offline and fast:
+
+- The core keeps only the essentials: import, browsing, categories/tags, search, layouts and drag-out;
+- New features will ship primarily as **plugins**, installed only when needed;
+- Plugins update independently, without downloading a new build of the app;
+- Core releases focus on bug fixes, performance and compatibility.
+
+Current plugin source:
+
+```
+https://fastly.jsdelivr.net/gh/jiuhui346/pickpic@main/plugins/index.json
+```
+
 ## Documentation
 
 - [User guide (Chinese)](docs/使用说明.md)
